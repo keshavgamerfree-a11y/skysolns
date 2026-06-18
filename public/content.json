@@ -1,0 +1,890 @@
+{
+  "hero": {
+    "title": "<span style=\"color: #136B36\">SKY LIFE SCIENCES</span> <span style=\"color: var(--accent-blue)\">SOLUTIONS</span>",
+    "desc": "We provide exceptional analytical solutions to solve the toughest Research and Development challenges in Pharmaceutical, Biotech and Life sciences companies with a wide range of high quality, sustainability as well as innovative next-generation Laboratory products.",
+    "mediaType": "image",
+    "mediaUrl": "/uploads/image_1781818186813.png",
+    "slideshowImages": [
+      "/uploads/lab_feasibility.png",
+      "/uploads/process_development.png"
+    ],
+    "btn1Text": "Explore Products",
+    "btn1Link": "#products",
+    "btn2Text": "Contact Us",
+    "btn2Link": "#contact",
+    "bgUrl": "/hero-bg.png",
+    "catalogPdf": "/uploads/sky_solutions_final_catalogue_1781814064404.pdf"
+  },
+  "cta": {
+    "title": "Let's Advance Scientific Innovation Together",
+    "buttonText": "Contact Us"
+  },
+  "sales": {
+    "title": "Delivering Intelligent Manufacturing Solutions",
+    "subtitle": "We provide end-to-end technology solutions from research and development through pilot plants and commercial manufacturing, helping organizations accelerate innovation, improve efficiency, and adopt next-generation manufacturing technologies.",
+    "solutions": [
+      {
+        "title": "Continuous Manufacturing",
+        "points": [
+          "Replacing traditional batch processes with continuous systems to increase safety, reliability, and scale-up velocity."
+        ]
+      },
+      {
+        "title": "Flow Chemistry Solutions",
+        "points": [
+          "Patented channel structures enabling high mass transfer, rapid temperature regulation, and highly automated chemistry."
+        ]
+      },
+      {
+        "title": "Advanced Separation Technologies",
+        "points": [
+          "Membrane-based continuous separation solutions to handle demanding liquid extraction and emulsion breaks."
+        ]
+      },
+      {
+        "title": "Continuous Crystallization",
+        "points": [
+          "Multi-stage systems providing exceptional crystal purity, consistent growth kinetics, and stable scales."
+        ]
+      },
+      {
+        "title": "Sustainability & Green Chemistry",
+        "points": [
+          "Low-footprint designs aimed at minimizing raw material usage, waste generation, and solvent consumption."
+        ]
+      },
+      {
+        "title": "Engineering & Consulting",
+        "points": [
+          "Comprehensive engineering support from basic feasibility and process optimization up to plant commissioning."
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "phone": "+91 9908140066",
+    "email": "shylender@skylifesciencessolutions.com",
+    "supportLink": "#",
+    "termsLink": "#",
+    "privacyLink": "#",
+    "accessibilityLink": "#",
+    "socials": {
+      "linkedin": "https://www.linkedin.com/company/skylifesciencessolutions",
+      "instagram": "#",
+      "facebook": "#",
+      "youtube": "#"
+    }
+  },
+  "aboutUs": {
+    "description": "Engineering the Future of Smart Manufacturing\n\nSky Lifesciences Solutions is a technology-driven organization focused on bringing next-generation manufacturing solutions to the pharmaceutical, chemical, agrochemical, and specialty chemical sectors.\n\nWe bridge the gap between traditional manufacturing and the factories of the future by integrating:\nContinuous Manufacturing \n\nFlow Chemistry,\nProcess Intensification,  \nComplete Lab Setup,  \nDigital Manufacturing,  \nGreen Chemistry,  \nIndustry 4.0 Solutions & More  \n\nThrough strategic partnerships with global technology leaders and our deep industry expertise, we help organizations improve productivity, quality, safety, and sustainability."
+  },
+  "statistics": [
+    {
+      "target": "2000",
+      "suffix": "+",
+      "label": "Products Delivered"
+    },
+    {
+      "target": "1000",
+      "suffix": "+",
+      "label": "Customers Supported"
+    },
+    {
+      "target": "100",
+      "suffix": "+",
+      "label": "Installations Completed"
+    },
+    {
+      "target": "10",
+      "suffix": "+",
+      "label": "Strategic Partners"
+    }
+  ],
+  "services": [
+    {
+      "id": "svc-2",
+      "title": "Complete Laboratory Setup",
+      "desc": "Configuring multistage systems to maximize mass transfer and solute partition coefficients.",
+      "iconKey": "engineering",
+      "img": "http://localhost:5173/uploads/image_1781812572039.png",
+      "learnMore": "#contact"
+    }
+  ],
+  "whatWeDo": {
+    "pageTitle": "Delivering Intelligent Manufacturing Solutions",
+    "tagline": "Enabling the Next Generation of Smart Continuous Manufacturing",
+    "introText": "We provide end-to-end technology solutions from research and development through pilot plants and commercial manufacturing, helping organizations accelerate innovation, improve efficiency, and adopt next-generation manufacturing technologies.",
+    "sections": [
+      {
+        "id": "sec-1",
+        "title": "Continuous Manufacturing",
+        "description": "Replacing traditional batch processes with continuous systems to increase safety, reliability, and scale-up velocity.",
+        "icon": "activity",
+        "image": "http://localhost:5173/uploads/image_1781809851311.png",
+        "video": "",
+        "backgroundImage": "",
+        "ctaButtonText": "Request Consultation",
+        "ctaButtonLink": "#contact"
+      },
+      {
+        "id": "sec-2",
+        "title": "Flow Chemistry Solutions",
+        "description": "Patented channel structures enabling high mass transfer, rapid temperature regulation, and highly automated chemistry.",
+        "icon": "flask",
+        "image": "http://localhost:5173/uploads/image_1781646472327.png",
+        "video": "",
+        "backgroundImage": "",
+        "ctaButtonText": "Learn More",
+        "ctaButtonLink": "#contact"
+      },
+      {
+        "id": "sec-3",
+        "title": "Advanced Separation Technologies",
+        "description": "Membrane-based continuous separation solutions to handle demanding liquid extraction and emulsion breaks.",
+        "icon": "separation",
+        "image": "http://localhost:5173/uploads/image_1781649446059.png",
+        "video": "",
+        "backgroundImage": "",
+        "ctaButtonText": "Learn More",
+        "ctaButtonLink": "#contact"
+      },
+      {
+        "id": "sec-4",
+        "title": "Continuous Crystallization",
+        "description": "Multi-stage systems providing exceptional crystal purity, consistent growth kinetics, and stable scales.",
+        "icon": "chromatography",
+        "image": "http://localhost:5173/uploads/image_1781813102263.png",
+        "video": "",
+        "backgroundImage": "",
+        "ctaButtonText": "Learn More",
+        "ctaButtonLink": "#contact"
+      },
+      {
+        "id": "sec-6",
+        "title": "Sustainability & Green Chemistry",
+        "description": "Low-footprint designs aimed at minimizing raw material usage, waste generation, and solvent consumption.",
+        "icon": "globe",
+        "image": "http://localhost:5173/uploads/vecteezy_biotechnology-concept-with-green-plant-leaves-laboratory_29282892-scaled-1_1781817959707.jpg",
+        "video": "",
+        "backgroundImage": "",
+        "ctaButtonText": "Learn More",
+        "ctaButtonLink": "#contact"
+      }
+    ],
+    "whyUs": [
+      {
+        "title": "Expertise in Continuous Manufacturing Technologies"
+      },
+      {
+        "title": "Global Technology Partnerships"
+      },
+      {
+        "title": "Sustainable Manufacturing Solutions"
+      },
+      {
+        "title": "End-to-End Technical Support"
+      },
+      {
+        "title": "Faster Process Development & Scale-Up"
+      },
+      {
+        "title": "Industry Training & Knowledge Transfer"
+      },
+      {
+        "title": "Commitment to Innovation and Excellence"
+      }
+    ]
+  },
+  "highlights": [
+    {
+      "id": "hl-1",
+      "img": "/highlight-award.png",
+      "title": "India Pharma Leaders Award",
+      "desc": "Honored for contributions to pharmaceutical innovation and continuous manufacturing.",
+      "date": "March 2026",
+      "gradientType": "preset-1",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/highlight-award.png"
+        },
+        {
+          "type": "image",
+          "url": "/bw.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-2",
+      "img": "/highlight-summit.png",
+      "title": "Agrochemicals R&D Summit 2026",
+      "desc": "Gold Partner participation alongside Zaiput Flow Technologies.",
+      "date": "April 2026",
+      "gradientType": "preset-2",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/highlight-summit.png"
+        },
+        {
+          "type": "video",
+          "url": "https://assets.mixkit.co/videos/preview/mixkit-dolly-shot-of-laboratory-equipment-and-test-tubes-40019-large.mp4"
+        }
+      ]
+    },
+    {
+      "id": "hl-3",
+      "img": "/highlight-chemexpo.jpg",
+      "title": "ChemExpo India",
+      "desc": "Hosted an exclusive industry seminar on flow chemistry and continuous manufacturing.",
+      "date": "April 2026",
+      "gradientType": "preset-3",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/highlight-chemexpo.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-4",
+      "img": "/highlight-exhibition.jpg",
+      "title": "CPEIS 2026 Exhibition",
+      "desc": "Sponsor and exhibitor showcasing advanced process technologies.",
+      "date": "May 2026",
+      "gradientType": "custom",
+      "customGradient": "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)",
+      "media": [
+        {
+          "type": "image",
+          "url": "/highlight-exhibition.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-5",
+      "img": "/highlight-bioasia.jpg",
+      "title": "BioAsia 2026",
+      "desc": "Participated in one of India's leading life sciences events.",
+      "date": "February 2026",
+      "gradientType": "preset-1",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/highlight-bioasia.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-6",
+      "img": "/highlight-conclave.jpg",
+      "title": "I-NOST Conclave",
+      "desc": "Industry participation focused on innovation, sustainability and life sciences advancement.",
+      "date": "January 2026",
+      "gradientType": "preset-2",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/highlight-conclave.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-7",
+      "img": "/bw.jpg",
+      "title": "BW Pharma Leadership Award",
+      "desc": "Recognized for Collaborative Innovation & Partnerships at the BW Pharma Leadership Awards.",
+      "date": "2026",
+      "gradientType": "preset-3",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/bw.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-8",
+      "img": "/industry.jpg",
+      "title": "Hyderabad Industry Meetings",
+      "desc": "Business discussions and collaboration meetings with pharmaceutical and life sciences stakeholders.",
+      "date": "2026",
+      "gradientType": "preset-1",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/industry.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-9",
+      "img": "/imapac.jpg",
+      "title": "IMAPAC Vaccines World Summit 2026",
+      "desc": "Participation in the global vaccines summit focusing on manufacturing advancements.",
+      "date": "2026",
+      "gradientType": "preset-2",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/imapac.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-10",
+      "img": "/purify.jpg",
+      "title": "Purify 25 Conclave",
+      "desc": "Showcasing advanced chromatography purification technologies.",
+      "date": "2025",
+      "gradientType": "preset-3",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/purify.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-11",
+      "img": "/icgw.jpg",
+      "title": "IGCW",
+      "desc": "International Genomics Conference and Workshop.",
+      "date": "2025",
+      "gradientType": "preset-1",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/icgw.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-12",
+      "img": "/fci25.jpg",
+      "title": "FCI25",
+      "desc": "Fantastic two days of learning, connecting, sharing and showcasing @FCI25.",
+      "date": "2025",
+      "gradientType": "preset-2",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/fci25.jpg"
+        }
+      ]
+    },
+    {
+      "id": "hl-13",
+      "img": "/DrM.jpg",
+      "title": "DrM Business Meetings",
+      "desc": "Discussing scalable vaccine production and bioprocess advancements.",
+      "date": "2026",
+      "gradientType": "preset-3",
+      "customGradient": "",
+      "media": [
+        {
+          "type": "image",
+          "url": "/DrM.jpg"
+        }
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "id": "lab-feasibility",
+      "slug": "lab-feasibility",
+      "title": "Lab Feasibility",
+      "desc": "",
+      "img": "/uploads/image_1781812572039.png"
+    },
+    {
+      "id": "process-development",
+      "slug": "process-development",
+      "title": "Process Development",
+      "desc": "",
+      "img": "/uploads/image_1781812614197.png"
+    },
+    {
+      "id": "industrial-production",
+      "slug": "industrial-production",
+      "title": "Industrial Production",
+      "desc": "",
+      "img": "/uploads/image_1781812682824.png"
+    },
+    {
+      "id": "dosing-lines",
+      "slug": "dosing-lines",
+      "title": "Dosing Lines",
+      "desc": "",
+      "img": "/uploads/dosing_lines.png"
+    },
+    {
+      "id": "phase-separation-extraction",
+      "slug": "phase-separation-extraction",
+      "title": "Phase Separation & Extraction",
+      "desc": "",
+      "img": "/uploads/image_1781812995554.png"
+    },
+    {
+      "id": "heterogeneous-catalysis-hydrogenation",
+      "slug": "heterogeneous-catalysis-hydrogenation",
+      "title": "Heterogeneous Catalysis / Hydrogenation",
+      "desc": "",
+      "img": "/uploads/image_1781813075414.png"
+    },
+    {
+      "id": "advanced-process-technologies",
+      "slug": "advanced-process-technologies",
+      "title": "Advanced Process Technologies",
+      "desc": "",
+      "img": "/uploads/image_1781813102263.png"
+    },
+    {
+      "id": "complete-catalog",
+      "slug": "complete-catalog",
+      "title": "COMPLETE CATALOG",
+      "desc": "Complete Product Catalog ",
+      "img": "/uploads/image_1781813540764.png"
+    }
+  ],
+  "products": [
+    {
+      "id": "p-1781643388278",
+      "name": "Corning Nebula™ Education Kits",
+      "category": "lab-feasibility",
+      "desc": "Corning® Advanced-Flow™ Reactor (AFR)  \nTechnologies and Products\nCorning Advanced-Flow Reactors are industry-leading, \ndisruptive innovations that can help change the way \nchemicals are made. AFR enables inherently safer, efficient \ncontinuous manufacturing while significantly reducing \ncost, footprint, and environmental impact.\nCorning provides high quality product and process \nsolutions for the seamless scale-up from lab to \ncommercial mass productions of pharmaceutical \nintermediates, fine and specialty chemicals, as well  \nas new material synthesis.\nCorning Nebula™ Education Kits enable colleges and \nuniversities to provide students in chemistry, chemical \nengineering, and related majors with inherently safer \nequipment to become proficient in flow chemistry  \nand flow reactor operation.\nCorning is one of the world’s leading innovators in material \nscience. For more than a century, we have applied our \nunparalleled expertise in specialty glass, ceramics, and \noptical physics to develop products that have created  \nnew industries and transformed people’s lives",
+      "img": "/uploads/image_1781644092355.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/Corning%20Nebula%20Education%20Kits%20Brochure%202026.pdf",
+      "slug": "corning-nebula-education-kits",
+      "technicalOverview": "• Available in two versions: Chemistry  \n   and Chemical Engineering\n• Enable inherently safer continuous  \nflow technology\n• Outstanding mixing and heat  \nexchange: patented HEART design\n• Seamless scale-up with other  \nAdvanced-Flow Reactor products\n• Digital interface for easy touch-based  \n   operation and wireless control",
+      "images": [
+        "/uploads/image_1781644092355.png"
+      ]
+    },
+    {
+      "id": "p-1781644371850",
+      "name": "Lab Reactor System 2",
+      "category": "lab-feasibility",
+      "desc": "Lab Reactor System 2 \nStepping into flow chemistry\nLab Dosing Unit\n• Plug and play system\n• High chemical durability due to full metal-free system\n• Up to 4 liquid lines including one  \n   high precision syringe pump\n• 1 gas line with pressure sensor\n• Thermostat for reaction temperature control included\n• Easy to use touch screen control interface\n• Real time data monitoring & recording. Data  \n   transfer (Ethernet)\nLab Reactor Unit\n• Outstanding mixing and heat exchange:  \n   patented HEART design\n• Up to 2 fluidic modules\n• Optional cooling coil\n• Back pressure regulator \n   for pressure control\n• Camera integrated\n• Seamless scale-up with other  \n   Advanced-Flow™ Reactor products",
+      "img": "/uploads/image_1781644397914.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20Lab%20Reactor%20System%202%20Brochure%202026.pdf",
+      "technicalOverview": "• LED panel control through dosing  \n   module touch screen interface\n• Tunable LED irradiation source,  \n   with 6 different wavelengths\n• High intensity LED lighting\n• Efficient light penetration with  \n   both sides of glass fluidic  \n   module iullminated\n• Extended LED efficiency and lifetime  \n   due to active liquid cooling\n• Back pressure regulator  \n   for pressure control\n• Seamless scale-up with other  \n   higher throughput G1 and G3  \n   photoreactors products",
+      "slug": "lab-reactor-system-2"
+    },
+    {
+      "id": "p-1781644948215",
+      "name": " Low-Flow Reactor System 2",
+      "category": "lab-feasibility",
+      "desc": "Low-Flow Reactor System 2\nStepping into flow chemistry\n• Plug and play system\n• High chemical durability due to full metal-free system\nLab Dosing Unit\n• Up to 4 liquid lines with an option\nof a high precision syringe pump\n• 1 gas line with pressure sensor\n• Thermostat for reaction temperature control\n• Easy to use touch screen control interface\n• Real time data monitoring & recording. Data\ntransfer (Ethernet)",
+      "img": "/uploads/image_1781644908179.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/Low%20Flow%20Reactor%20System%202%20Brochure%202026.pdf",
+      "technicalOverview": "• Outstanding mixing and heat\nexchange: patented HEART design\n• Low hold-up\n• Highly flexible for multiple\nstep reactions\n• Multiple temperature zones\n• Up to 10 glass fluidic modules\n• Seamless scale-up with other\nAdvanced-Flow™ Reactors",
+      "slug": "low-flow-reactor-system-2"
+    },
+    {
+      "id": "p-1781645137216",
+      "name": "G1 Reactor",
+      "category": "process-development",
+      "desc": "G1 Reactor\nProcess development\nand small production\n• Outstanding mixing and heat exchange:\npatented HEART design\n• Small internal volume\n• High residence time\n• Highly flexible and multipurpose\n• High chemical durability\n• Transparent and compatible with\na light module for photochemistry\n• Hybrid glass/SiC solution\n• Seamless scale-up with other\nAdvanced-Flow™ Reactor products\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*",
+      "img": "/uploads/image_1781645108270.png",
+      "pdf": "https://www.corning.com/worldwide/en/innovation/corning-emerging-innovations/advanced-flow-reactors.html",
+      "technicalOverview": "• Reactor is multipurpose\n• Configuration can be customized\n• Injection points may be added\nanywhere on the reactor",
+      "slug": "g1-reactor"
+    },
+    {
+      "id": "p-1781645299330",
+      "name": "G1 SiC Reactor",
+      "category": "process-development",
+      "desc": "G1 Reactor\nProcess development\nand small production\n• Outstanding mixing and heat exchange:\npatented HEART design\n• Small internal volume\n• High residence time\n• Highly flexible and multipurpose\n• High chemical durability (suitable for high\npH compounds and hydrofluoric acid)\n• Hybrid glass/SiC solution\n• Seamless scale-up with other\nAdvanced-Flow™ Reactor products\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*",
+      "img": "/uploads/image_1781645286063.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20SiC%20Reactor%20Brochure%202026.pdf",
+      "technicalOverview": "Reactor Configuration\n• Reactor is multipurpose\n• Configuration can be customized\n• Injection points may be added\nanywhere on the reactor",
+      "slug": "g1-sic-reactor"
+    },
+    {
+      "id": "p-1781645458885",
+      "name": "G1 Photo Reactor",
+      "category": "process-development",
+      "desc": "G1 Photo Reactor\nProcess development and\nsmall production Photo Reactor\n• Integration of a G1 glass reactor with\na multiple wavelength LED lighting module\n• Outstanding mixing and heat exchange:\npatented HEART design\n• Small internal volume\n• High residence time\n• Highly flexible and multipurpose\n• High chemical durability\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction Volume 1000X lower*\n• Residence time distribution 50X better*",
+      "img": "/uploads/image_1781645456680.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20Photo%20Reactor%20Brochure%202026.pdf",
+      "technicalOverview": "Lighting Module Features\n• Tunable UV LED irradiation source\navailable in multiple wavelength arrays\n• LED lighting intensity higher\nthan 100 mW/cm2\nG4\nProduction\n• Efficient light penetration with both\nsides of glass fluidic modules illuminated\n• Safe operation with low\ntemperature UV lighting technology\n• Extended LED lifetime due\nto efficient liquid cooling",
+      "images": [
+        "/uploads/image_1781645456680.png"
+      ],
+      "slug": "g1-photo-reactor"
+    },
+    {
+      "id": "p-1781645644189",
+      "name": "G1 Process Development System",
+      "category": "process-development",
+      "desc": "G1 Process Development System\n• Flexible and versatile system\ndesign for process development\n• Compatible with any type of G1 reactor\nbased on glass or SiC fluidic modules\n• Up to 4 liquid dosing lines and 1 gas line,\noffering various materials of construction\nfor chemical compatibility\n• Flow control through reactant\nvessel weight measurement\n• Control system with touch screen interface\nenabling an easy control of main features\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*",
+      "img": "/uploads/image_1781645638351.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20Process%20Development%20System%20Brochure%202026.pdf",
+      "technicalOverview": "Reactor\nDosing\nlines\nThermostat\nDownstream\nequipment\nElectrical\ncabinet with\nautomation\nControl\nsystem\n1 G1 10 FM (SiC, Glass, or Hybrid)\n2 liquid dosing lines - Wetted materials:\nstainless steel / gear pump\n2 liquid dosing lines - Wetted materials:\nHastelloy / gear pump\n2 liquid dosing lines - Wetted materials:\nPFA & PTFE (metal free) / piston pump\n1 gas line - MOC: stainless steel\nAll being equipped of automated valves\n2 thermostats - 20⁰C* / 200⁰C\n2 thermostats 0⁰C* / 120⁰C\n*Lower temperature possible in option\nMetal free back pressure regulator\nwith automated control\n2 automated valves to switch\nin between collecting vessels\nBased on Siemens\nautomation devices\nComputer with human machine interface\nSoftware compliant with CFR 21 part 11\nData visualization through\ngraphs and recording\nConfigurable recipes\nFlow Rate\nUp\nto\n2000 ml/min\nTemperature\nPressure -600C\nto\n2000C\nUp to\n18\nbarg",
+      "slug": "g1-process-development-system"
+    },
+    {
+      "id": "p-1781646128135",
+      "name": "G1 Production System",
+      "category": "industrial-production",
+      "desc": "Flexible and versatile system  \n  design for industrial production\n• FDA compliant subject to customer  \n   certification, including control software\n• Compatible with any type of Corning G1  \n   reactor, based on glass or SiC fluidic modules\n• Up to 6 liquid dosing lines and 1 gas line,  \n   offering various materials of construction  \n   for chemical compatibility\n• Metal free downstream equipment\n• Appropriate thermostat integrated into HMI\n• Fully automated system\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*",
+      "img": "/uploads/image_1781646150884.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20Production%20System%20Brochure%202026.pdf",
+      "technicalOverview": "Item Type\n(other limited options available on request)\nReactor\nDosing \nlines\nThermostat\nDownstream  \nequipment\nElectrical \ncabinet with \nautomation\nControl  \nsystem\n1 G1 10 FM (SiC, Glass, or Hybrid\n2 liquid dosing lines - Wetted materials:  \nstainless steel / gear pump\n2 liquid dosing lines - Wetted materials:  \nHastelloy / gear pump\n2 liquid dosing lines - Wetted materials:  \nPFA & PTFE (metal free) / piston pump\n1 gas line - MOC: stainless steel\nAll being equipped of automated valves\n2 thermostats - 20⁰C* / 200⁰C\n2 thermostats 0⁰C* / 120⁰C\n*Lower temperature possible in option\nMetal free back pressure regulator  \nwith automated control \n2 automated valves to switch  \nin between collecting vessels\nBased on Siemens  \nautomation devices\nComputer with human machine interface\nSoftware compliant with CFR 21 part 11\nData visualization through  \ngraphs and recording\nConfigurable recipes",
+      "slug": "g1-production-system"
+    },
+    {
+      "id": "p-1781646300798",
+      "name": "G3 Reactor ",
+      "category": "industrial-production",
+      "desc": "Pilot and Production Reactor\n• Outstanding mixing and heat exchange:  \n   patented HEART design\n• Large internal volume\n• High residence time\n• Highly flexible\n• Transparent and compatible with  \n   a light module for photochemistry\n• Seamless scale-up with other  \nAdvanced-Flow™ Reactors products\n• High chemical durability \n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*\nFluidic module size: \n310 x 250 mm",
+      "img": "/uploads/image_1781646210421.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G3%20Reactor%20Brochure%202026.pdf",
+      "technicalOverview": "Make industrial production  \nreal with G3 Reactor \n• Direct seamless scale up from G1 - G3 \nG4\nProduction\nMaterials \n• Shorter time to market* \n• Low space requirement* \n• Easy integration into existing unit \n• Turnkey solution \n• Technical support from lab test  \n   to industrial setup",
+      "slug": "g3-reactor"
+    },
+    {
+      "id": "p-1781646480514",
+      "name": "G3 Photo Reactor",
+      "category": "industrial-production",
+      "desc": "G3 Photo Reactor - Production Reactor\n• Designed for photochemistry \n   with integrated LED lighting system\n• Outstanding mixing and heat exchange:  \n   patented HEART design\n• Large internal volume\n• High residence time\n• Highly flexible\n• Seamless scale-up with other  \nAdvanced-Flow™ Reactors products\n• High chemical durability \n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*\nFluidic module size: \n310 x 250 mm",
+      "img": "/uploads/image_1781646472355.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G3%20Photo%20Reactor%20Brochure%202026.pdf",
+      "technicalOverview": "Benefits and Features\nG3 Photo Reactor for industrial production \n• Shorter time to market* \n• Low space requirement* \n• Technical support from lab  \n   test to industrial startup\nG3 Photo Reactor lighting features \n• Monochromatic LED irradiation \n(different wavelengths available on demand)  \nG4\nProduction\nMaterials \n• Efficient light penetration with both  \n   sides of fluidic modules illuminated \n• Safe operation with low  \n   temperature lighting technology \n• Extended LED lifetime due  \n   to efficient liquid cooling",
+      "slug": "g3-photo-reactor"
+    },
+    {
+      "id": "p-1781646630261",
+      "name": "G4 Reactor",
+      "category": "industrial-production",
+      "desc": "G4 SiC Reactor - Production Reactor\n• Outstanding mixing and heat exchange:  \n  patented HEART design\n• Large internal volume\n• High residence time\n• Highly flexible\n• Seamless scale-up with other  \nAdvanced-Flow™ Reactors products\n• High chemical durability  \n   (suitable for high pH compounds and hydrofluoric acid)\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*\nFluidic module size: \n462 x 314 mm",
+      "img": "/uploads/image_1781646610556.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G4%20SiC%20Reactor%20Brochure%202026.pdf",
+      "technicalOverview": "Make industrial production  \nreal with G4 SiC Reactor \n• Direct seamless scale up from G1 - G4 \nG4\nProduction\nMaterials \n• Shorter time to market* \n• Low space requirement* \n• Easy integration into existing unit \n• Turnkey solution \n• Technical support from  \n   lab test to industrial setup",
+      "slug": "g4-reactor"
+    },
+    {
+      "id": "p-1781646975668",
+      "name": "G5 Reactor",
+      "category": "industrial-production",
+      "desc": "The G5 reactor, in particular is capable of delivering annual throughput over 10,000 metric tons per reactor unit. Both reactor models have  a small footprint and can easily be integrated into an existing plant as a cost competitive solution.",
+      "img": "/uploads/image_1781646902391.png",
+      "pdf": "https://www.corning.com/worldwide/en/about-us/news-events/corning-advances-flow-reactor-technology-for-industrial-chemical-production.html",
+      "slug": "g5-reactor"
+    },
+    {
+      "id": "p-1781647196756",
+      "name": "Dosing Lines",
+      "category": "dosing-lines",
+      "desc": "A consistent and pulseless flow is key for flow chemistry. \nCorning can provide a suitable dosing system including \nflow control and safety valve for Low-Flow to G4 reactors.\nKey Features\n• Include electrical supply and human interface device  \n   (either locally or integrated in customer Decentralized  \n   Control System) \n• Engineered dosing lines \n• Highly flexible \n• High chemical durability \n• Mass transfer 100X better* \n• Heat transfer 1000X better* \n• Reaction volume 1000X lower* \n• Residence time distribution 50X better*",
+      "img": "/uploads/image_1781647175814.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/Dosing%20Lines%20Brochure%202026.pdf",
+      "technicalOverview": "Corning® Advanced-Flow™ reactors \ninclude a full range or services to  \nenhance customers’ projects from \ndevelopment, through implementation  \nand operation including: \n \n• Workshops and trainings \n• Quick feasibility test (QFT) \n• Basic and detailed auxiliary  \n   systems engineering \n• Customized turnkey solutions \n• Technical support \n• FAT/SAT and industrial start up \n• Assistance for FDA qualifications \n• Pre-and post purchase technical support \n• Compliance with international standards  \n   (ATEX, PED, SELO...)",
+      "slug": "dosing-lines"
+    },
+    {
+      "id": "p-1781647543299",
+      "name": "G1 Dosing Line (DL1A-11)",
+      "category": "dosing-lines",
+      "desc": "Consistent and pulseless flow is a key parameter for flow \nchemistry. Corning has developed suitable dosing systems \nfor Low-Flow to G4 reactors to deliver complete turnkey \nsolutions for process development and production. The \nDL1A-11 is a high precision dosing line specially designed \nto fit with Corning’s G1 reactor",
+      "img": "/uploads/image_1781647512636.png",
+      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20Dosing%20Line%20Brochure%202026.pdf",
+      "technicalOverview": "• Advanced gear pump and Coriolis  \n   mass flow meter technology \n• Precise and reproducible flow rate \n• Local or remote control through a PC \n• Pressure switch \n• Compact design and small internal volume \n• Dosing line can be stacked together  \nor installed side by side \n• User friendly \n• Easy rinsing and cleaning \n• Wide range of material compatibility \n• Mass transfer 100X better* \n• Heat transfer 1000X better* \n• Reaction volume 1000X lower* \n• Residence time distribution 50X better*",
+      "slug": "g1-dosing-line-dl1a-11"
+    },
+    {
+      "id": "p-1781648860907",
+      "name": "Development Scale Liquid-Liquid/Gas-Liquid Separators",
+      "slug": "development-scale-liquid-liquid-gas-liquid-separators-1781648860907",
+      "category": "phase-separation-extraction",
+      "desc": "Efficiently separate liquids with our bench top to plant scale liquid liquid separator. Easy to use tools for chemists.\n\nFeatures\nBench top to plant scale Our devices are well-characterized and directly scalable from lab to pilot to production . Separate emulsions with ease Instead of using agitation to form microdroplets, we improve mixing by using a flow pattern that has a large surface area, thus avoiding emulsions that generally cause separation issues. Existing emulsions tend to break as they encounter the membrane. Independent of density The operating principle behind the technology is based on a liquid’s wettable nature, so it works with any liquid-liquid system regardless of their density difference. Excellent chemical compatibility Machined in materials with excellent chemical resistance, Zaiput separators work with a wide range of organic solvents, in acidic and basic solutions. Easy usage and maintenance Plug and play functionality at all scales. Continuous operation for batch /flow chemistry Our devices can be easily used and integrated within either a batch process or a continuous one.",
+      "technicalOverview": "",
+      "img": "https://www.zaiput.com/wp-content/uploads/2018/07/isolated_2019.png",
+      "images": [
+        "https://www.zaiput.com/wp-content/uploads/2018/07/isolated_2019.png",
+        "https://www.zaiput.com/wp-content/uploads/2022/08/LLS_desc_main2.jpeg",
+        "https://www.zaiput.com/wp-content/uploads/2022/08/Page-3-Diagram-1.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2022/08/LLS_desc_image1.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2022/08/LLS_desc_image2.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2020/04/SEP-4.png",
+        "https://www.zaiput.com/wp-content/uploads/2020/04/SEP-5.png",
+        "https://www.zaiput.com/wp-content/uploads/2020/05/SEP7-b.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2020/04/SEP-9.png",
+        "https://www.zaiput.com/wp-content/uploads/2021/06/Small-Internal-Volume.jpg"
+      ],
+      "videos": [
+        "https://www.zaiput.com/wp-content/themes/blankslate/assets/video/bg.mp4"
+      ],
+      "pdf": "http://www.zaiput.com/technical_notes/Membrane_selection.pdf",
+      "sourceUrl": "https://www.zaiput.com/product/liquid-liquid-gas-separators/"
+    },
+    {
+      "id": "p-1781648937109",
+      "name": "Production Scale Separators & Extraction Platforms",
+      "slug": "production-scale-separators-extraction-platforms-1781648937109",
+      "category": "phase-separation-extraction",
+      "desc": "Liquid Liquid continuous extraction platforms for reaction workup. Improve phase separation quality and extraction efficiency\n\nFeatures\nBatch reactors are commonly underutilized by companies that rely on them as both reaction and extraction vessels. They are the most valuable asset in a plant, capable of producing APIs, intermediates, and other products and yet we often don’t use them to their full capacity so that we can squeeze a workup or quench into the same vessel. This underutilization is compounded across the number of reactors in a plant, leading to tens of millions of sunk cost not generating the best potential returns. Operators and plant managers waste thousands of hours every year optimizing mixing and settling conditions, waiting for mixing to occur, waiting for emulsions to settle & watching phase interfaces while a reactor drains. All of this is wasted time that can be better utilized both in terms of people and assets. Zaiput improves plant productivity by taking the workup out of the reactor. Instead, the workup is carried out in-line by pumping directly out of solvent storage and teeing into the product before static mixing elements. Right away, this allows plant operators to double the capacity of their reactors while taking less time to carry out their extraction. The static mixers are specifically designed to give full mass transfer while the high throughput membrane separator simplifies phase separation. Brought together you get a fast, efficient extraction in less time. Importantly for CDMOs, this will allow companies to bring in more projects and larger projects than their current capacity allows, which will directly translate to the bottom line. The technology is applicable across a wide range of solvent systems and can be easily implemented, with minor adjustments, from process to process. Zaiput helps engineers and plant managers hit their continuous improvement and efficiency goals across a broad range of key parameters. From increasing product output to bringing in more projects and reducing loss from difficult separations, Zaiput helps you accomplish ambitious plant improvements. If you’re interested in any of these benefits or curious about others, email us at Sales@Zaiput.com .",
+      "technicalOverview": "Europe: SalesEurope@Zaiput.com Americas: SalesUSA@Zaiput.com +1 (617) 714-9806 x704 Global: Sales@Zaiput.com +1 (617) 714-9806 Notice: JavaScript is required for this content.",
+      "img": "https://www.zaiput.com/wp-content/uploads/2021/07/Faded-Background.png",
+      "images": [
+        "https://www.zaiput.com/wp-content/uploads/2021/07/Faded-Background.png",
+        "https://www.zaiput.com/wp-content/uploads/2022/08/Page-1-SEP-3000.png",
+        "https://www.zaiput.com/wp-content/uploads/2018/07/40K-No-Background-150x150.png",
+        "https://www.zaiput.com/wp-content/uploads/2022/08/Page-1-ZFOX-3000.png",
+        "https://www.zaiput.com/wp-content/uploads/2018/07/ZFOX-40K-No-Background-1-150x150.png",
+        "https://www.zaiput.com/wp-content/uploads/2022/08/Page-1-Diagram.png",
+        "https://www.zaiput.com/wp-content/uploads/2022/08/Page-1-Diagram-3.png",
+        "https://www.zaiput.com/wp-content/uploads/2022/08/loss-of-time-1.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2021/06/Loss-of-time-181x300.png",
+        "https://www.zaiput.com/wp-content/uploads/2022/08/Page-2-Diagram-1.jpg"
+      ],
+      "videos": [],
+      "pdf": "https://www.zaiput.com/wp-content/uploads/2021/06/White-Paper-Final.pdf",
+      "sourceUrl": "https://www.zaiput.com/product/z-fox-batch-extraction-platform/"
+    },
+    {
+      "id": "p-1781648975444",
+      "name": "Multistage Extraction",
+      "slug": "multistage-extraction-1781648975444",
+      "category": "phase-separation-extraction",
+      "desc": "Counter-current extraction platforms for enhanced extraction efficiency. Powered by Zaiput's membrane-based phase separators\n\nFeatures\nOur lab scale platform (MS-10) is the only existing tool for bench liquid-liquid counter-current extraction process development Minimal internal volume ~3ml per stage at MS-10 scale Easily scalable to pilot ( MS-200 ) and production ( MS-3000 or MS-40K ) Easy to use and clean Simple to add/remove extraction stages Addresses the most difficult extractions High extraction efficiency Provides a continuous solvent extraction solution",
+      "technicalOverview": "Contact us if you need more than 5 stages. Platforms can be easily connected together. Part Number MS10-5 Width 500 mm (19.7 inches) Depth 400 mm (15.7 inches) Height 155 mm (6.1 inches) Total flow rate 0-10 ml/min Wetted parts: Separators ETFE, PFA, FEP, PTFE Tubing/ flow sensors PFA Interstage pumps FFMK, PVDF Ports 1/4-28 Flat bottom Max temperature of operation 80°C Hold-up volume per stage ~2 ml",
+      "img": "https://www.zaiput.com/wp-content/uploads/2018/06/isolated_MSE_2019.png",
+      "images": [
+        "https://www.zaiput.com/wp-content/uploads/2018/06/isolated_MSE_2019.png",
+        "https://www.zaiput.com/wp-content/uploads/2020/07/Multistage-1.png",
+        "https://www.zaiput.com/wp-content/uploads/2018/08/mixersettler.png",
+        "https://www.zaiput.com/wp-content/uploads/2018/08/columns.png",
+        "https://www.zaiput.com/wp-content/uploads/2018/08/centrifuges.png",
+        "https://www.zaiput.com/wp-content/uploads/2019/05/mse_desc_table.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2018/06/CCLLE.png",
+        "https://www.zaiput.com/wp-content/uploads/2019/05/process_scaleup_diagram_2019_b.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2018/06/16-scaled.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2018/06/MS3000_03-scaled.jpg"
+      ],
+      "videos": [],
+      "pdf": "",
+      "sourceUrl": "https://www.zaiput.com/product/multistage-extraction/"
+    },
+    {
+      "id": "p-1781649313992",
+      "name": "Zaiput TWR reactor for heterogeneous catalysis",
+      "slug": "zaiput-twr-reactor-for-heterogeneous-catalysis-1781649313992",
+      "category": "heterogeneous-catalysis-hydrogenation",
+      "desc": "Continuous Reactor for Hydrogenations with excellent heat and mass transfer, easily scalable from lab to plant\n\nFeatures\nDirect scalability from Lab to Plant scale Our devices are directly scalable from lab to pilot to production due to the scaling geometry factor which maintains residence time and performance constant across scales. Modularity & Configuration Customization The reactor components (“blocks”) are modular layers which can be arranged in a custom order to build the perfect reactor configuration (“tower”) for any type of chemistry. Safe Continuous Operation Our devices drastically reduce dead volume making the process safer while minimizing footprint and reagents consumption. High Efficiency & Control Our devices can boost performance due to optimal heat and mass transfer. This allows to improve catalyst usage and eliminate hot spots.\n\nApplications\nThe Zaiput reactor can be used to carry out many different hydrogenation reactions, as well as other classes of heterogeneously catalyzed reactions.",
+      "technicalOverview": "",
+      "img": "https://www.zaiput.com/wp-content/uploads/2025/03/HCR_hero_1.png",
+      "images": [
+        "https://www.zaiput.com/wp-content/uploads/2025/03/HCR_hero_1.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/03/scales-scaled.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/03/Comparison-technologies-scaled.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/02/HCR_hero_1-279x300.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/03/schematic-TWR-scaled.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/03/twr10-twr100-1024x732.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/03/temperature-control-1024x541.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/03/Screenshot-2026-05-27-092050_edited-1024x577.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/03/scalability-1024x385.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/03/scalability-2-1024x514.png"
+      ],
+      "videos": [],
+      "pdf": "",
+      "sourceUrl": "https://www.zaiput.com/product/heterogeneous-catalysis-hydrogenation/"
+    },
+    {
+      "id": "p-1781649471843",
+      "name": "Crystallization",
+      "slug": "crystallization-1781649471843",
+      "category": "advanced-process-technologies",
+      "desc": "Zaiput Continuous Crystallization for superior crystal quality attributes and seamless lab-to-plant scalability.\n\nFeatures\nImportant Features: Superior Plug Flow Characteristics The 11 connected tanks in series offer unprecedented plug flow characteristics within one unique device. No Need for Transfer Lines The tanks are all connected, thus there is no need to worry about transfer lines or fouling. Minimal Internal Volume Our devices have a small internal volume to minimize footprint, reagent consumption, and material costs during development. Continuous Operation Our devices can boost productivity and can be easily used and integrated within either a batch process or a continuous one. Other Advantages: Excellent Supersaturation Control & Fast Mixing The innovative impeller design and small internal volume of each tank offer fast mixing and very tight control on supersaturation conditions, improving your CQAs. Excellent Temperature Control The innovative design offers very tight control on the temperature within each tank to improve your CQAs. Chemical Compatibility Machined in materials with excellent chemical resistance, Zaiput crystallizers work with a wide range of organic solvents, in acidic and basic solutions. Easy Usage and Maintenance Plug and play functionality at all scales. Rapid Scaling Processes can be optimized at the lab scale and then directly scaled to production quickly thanks to the scaling geometry factor which maintains residence time and performance constant across scales.",
+      "technicalOverview": "",
+      "img": "https://www.zaiput.com/wp-content/uploads/2025/10/IMG_408-scaled.png",
+      "images": [
+        "https://www.zaiput.com/wp-content/uploads/2025/10/IMG_408-scaled.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/10/Group3.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/10/Group-1.png",
+        "https://www.zaiput.com/wp-content/uploads/2025/10/Group2.png"
+      ],
+      "videos": [],
+      "pdf": "",
+      "sourceUrl": "https://www.zaiput.com/product/crystallization/"
+    },
+    {
+      "id": "p-1781649520990",
+      "name": "Partition Chromatography",
+      "slug": "partition-chromatography-1781649520990",
+      "category": "advanced-process-technologies",
+      "desc": "Continuous Liquid Liquid Partition Chromatography for separation of chemical species, powered by Zaiput's membrane-based separators\n\nFeatures\n• Continuous Liquid-Liquid Partition Chromatography | Zaiput Continuous Liquid-Liquid Partition Chromatography No solid stationary phase –> Low CAPEX & OPEX\n• Ease of process development\n• Scalable from Lab to Plant\n• Description\n• How It Works\n• Applications\n• Literature\n• Ordering Information\n\nApplications\nSeparation of Chiral Molecules Separation of Natural products Separation of Isomers Purification of Peptides or Oligonucleotides CLL-PC allows separation of chemical specie leveraging differences in partitioning of the species not two different liquid phases. Applications are across a wide spectrum, in the literature partition chromatography has been applied in several areas such as separation of chiral molecules, natural products , isomers in general. The Zaiput unique approach to continuous Partition Chromatography has two key features : No need of density difference between the liquid phases, thus expanding application space No moving parts, thus providing robust industrial solution",
+      "technicalOverview": "",
+      "img": "https://www.zaiput.com/wp-content/uploads/2024/05/CLLPC.png",
+      "images": [
+        "https://www.zaiput.com/wp-content/uploads/2024/05/CLLPC.png",
+        "https://www.zaiput.com/wp-content/uploads/2017/05/cpc-pic.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2018/06/MS3000_03-scaled.jpg"
+      ],
+      "videos": [],
+      "pdf": "",
+      "sourceUrl": "https://www.zaiput.com/product/continuous-liquid-liquid-partition-chromatography/"
+    },
+    {
+      "id": "p-1781649549803",
+      "name": "Back Pressure Regulators",
+      "slug": "back-pressure-regulators-1781649549803",
+      "category": "advanced-process-technologies",
+      "desc": "Enhance your process efficiency with a back pressure regulator that offers metal-free wetted parts and accurate, clog-resistant multiphase flow.\n\nFeatures\nMetal-free wetted parts Maximum pressure: 2 MPa (290 psi) Very accurate and precise (1%) Error < 1% across flow rates of 0-1000ml/min Adjustable set point Users can simply set any pressure for the BPRs by adjusting the pressure of the compressed air chamber Excellent for gas-liquid streams Zaiput’s BPRs are designed to function with a stream containing gas, liquid, or multiphase. Robust to clogging Our devices eliminate extremely small orifices, which can cause clogging and over-pressurizing.\n\nApplications\nThe internal parts of Zaiput BPRs are made of polymers. Therefore, the recommended operating temperature is below 130 ˚C. For any application at higher temperatures, consult our service team for a customized solution.",
+      "technicalOverview": "Part Number BPR-10 Total Flow Rate 0.05-20 ml/min (for high accuracy) Max Set Point Pressure 2 MPa (290 psi) Dimensions 52 x 52 x 44 mm Max Inlet Pressure 5 MPa Max Operating Temp 90 ℃ Process Fluid Ports 1/4″ UNF – 28 flat bottom Wetted parts Perfluorinated polymers (ETFA, PFA) Error < 1% Part Number BPR-1000 Total Flow Rate 20-1000 ml/min (for high accuracy) Max Set Point Pressure 2 MPa (290 psi) Dimensions 97 x 97 x 64 mm Max Inlet Pressure 5 MPa Max Operating Temp 90 ℃ Process Fluid Ports 1/4″ OD tubing with Swagelok PFA fittings and our compression nut Wetted parts Perfluorinated polymers (ETFA, PFA) Error < 1% *Scroll left to see more of the table Notice: JavaScript is required for this content.",
+      "img": "https://www.zaiput.com/wp-content/uploads/2018/06/isolated_BPR_2019_2.png",
+      "images": [
+        "https://www.zaiput.com/wp-content/uploads/2018/06/isolated_BPR_2019_2.png",
+        "https://www.zaiput.com/wp-content/uploads/2019/06/BPR_DESC_diagram_1.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2018/06/isolated_BPR_2019_2-300x255.png",
+        "https://www.zaiput.com/wp-content/uploads/2019/06/BPR_HOW_Intro.png",
+        "https://www.zaiput.com/wp-content/uploads/2019/06/BPR_HOW_Closed.png",
+        "https://www.zaiput.com/wp-content/uploads/2019/06/BPR_HOW_Open.png",
+        "https://www.zaiput.com/wp-content/uploads/2018/06/BPR_home_2019_2-300x300.jpg",
+        "https://www.zaiput.com/wp-content/uploads/2019/05/BPR1000_Spec_1.jpg"
+      ],
+      "videos": [],
+      "pdf": "",
+      "sourceUrl": "https://www.zaiput.com/product/back-pressure-regulators/"
+    },
+    {
+      "id": "p-1781809474074",
+      "name": "IKA Flow",
+      "category": "process-development",
+      "desc": "Flow chemistry made easy and affordable with IKA FLOW. Its secret: Unlike other commercially available flow chemistry equipment, you just purchase the necessary part of the flow chemistry apparatus.\n\nThe portable IKA FLOW is an attachment that forms a flow chemistry reactor in combination with your IKA magnetic stirrer RCT digital. In addition, it has been designed to be used with any fume hood gas source (with a 6 mm pressure tubing and an adaptor to typical fume hood gas supplies) such as compressed air or nitrogen.\n\nIKA FLOW’s scope of delivery includes in addition to the attachment, a glass bottle, a mixing chip, support screws, three on-and-off valves, a heating block, four disc reactors, and a labeled tubing set.",
+      "img": "/uploads/image_1781809450408.png",
+      "pdf": "https://www.ika.com/ika/pdf/flyer-catalog/IKA_Flow%20Chemistry_Folder_21_03_IWS_EN.pdf",
+      "technicalOverview": "Scope of Delivery\n- IKA FLOW System\n- Glass Bottle\n- Heating Block\n- CDR.PP Standard (4 pcs.)\n- Capillary Set\n- Tubing Set\n- Image\n\nTechnical Data\nStandard: DIN EN 1595\nMax. Solvent Volume: 500 ml\nConnection Type: Push-to-Connect // Screw Fittings\nInlet Tubing Outer Diameter: 6.35 mm\nTubing A Outer Diameter: 3.2 mm\nTubing A Inner Diameter: 1.6 mm\nTubing 0-11 Outer Diameter: 1.6 mm\nTubing 0-9 & 11 Inner Diameter: 0.8 mm\n\nMain Housing\nMaterial: 304 Stainless Steel, Nylon (PA)\nDimensions (W × H × D): 250 × 375 × 140 mm\nWeight: 2.7 kg\n\nHeating Block\nMaterial: Aluminum\nDimensions (Ø × H): 175 × 25.5 mm\nWeight: 0.65 kg\n\nDisc Reactor\nMaterial: Polypropylene (PP)\nVolume: 4092 mm³\n\nPressure & Temperature\nMax. Input Pressure: 1 MPa\nInput Pressure: Pressure of the gas from fume hood\nMax. Working Pressure: 137 kPa\nWorking Pressure: Pressure of the gas in solvent bottle\nMax. Working Temperature: 100 °C\n\nCapillaries\nCapillary 1: Ø 0.125 mm × 50 mm\nCapillary 2: Ø 0.125 mm × 100 mm\nCapillary 3: Ø 0.18 mm × 50 mm\nCapillary 4: Ø 0.25 mm × 100 mm\n\nOverall Dimensions\nDimensions (W × H × D): 250 × 400 × 350 mm\nPermissible Ambient Temperature: 5 – 40 °C",
+      "slug": "ika-flow"
+    },
+    {
+      "id": "p-1781809680177",
+      "name": "ElectraSyn 2.0 Package",
+      "slug": "electrasyn-2-0-package-1781809680177",
+      "category": "lab-feasibility",
+      "desc": "ElectraSyn 2.0 is a three-in-one device that runs electrosynthesis, cyclic voltammetry (CV), and room temperature stirring. Its beginner-friendly features allow synthetic chemist to run simple CV and explore the substrate’s electrochemical properties; set up constant current or constant voltage reactions in the most intuitive way.\n\nWe constantly strive to further optimize our devices for you. That is why our development never stops. The device keeps evolving with software development which enables state-of-art functionalities benefitting scientific discovery. Accessories are widely available in order to support the expanded functionalities.\n\nThe IKA ElectraSyn App (available for both iPhone and Android) enables reaction and CV experiment monitoring, data transmitting, and various other functions.",
+      "technicalOverview": "ElectraSyn flow\nComplete system\nNine combinable half cells with 6 different standard electrodes: 2x graphite, 2x glass-carbon, 2x nickel, 1x lead, 1x lead-bronze, 1x copperr\nSpecial electrodes made of gold, platinum, stainless steel or boron-doped diamond (BDD) available on request\nProduct fully recyclable\nElectro-organic synthesis current infinitely variable\nModular and compact system, ideal for R&D\nCell division by proton-conducting / cation-conducting diaphragm",
+      "img": "",
+      "images": [
+        "",
+        ""
+      ],
+      "videos": [],
+      "pdf": "",
+      "sourceUrl": "https://www.skylifesciencessolutions.com/ElectraSyn.php"
+    },
+    {
+      "id": "p-1781810146434",
+      "name": "Super Metering Pump SMP",
+      "slug": "super-metering-pump-smp-1781810146434",
+      "category": "dosing-lines",
+      "desc": "Features\nHigh accuracy: Discharge precision of ±0.1% or better across the specified flow range — even more accurate than a flowmeter. Consistent flow: Maintains a steady flow rate despite varying discharge pressures. Proportional control: Flow rate is directly proportional to pump speed. Pulse-free: Reciprocating mechanism ensures smooth, pulse-free performance.\n\nApplications\nLine mixing & emulsification: Enables instantaneous mixing/homogenization in feed lines without batch systems. Precision coating: Ensures uniform coatings (dip/roll) with no pulsation, bubbles, or pressure fluctuation issues. Precision cleaning, spraying & spray drying: Stable discharge regardless of back-pressure variations, ideal for viscous environments. Additive feeding to extruders: Delivers consistent additive/foaming agent dosing, resulting in uniform particle sizes. Dosing lines: Achieves highly precise dosing when paired with servo motor position control. -->",
+      "technicalOverview": "Metal-free specification: Suitable for corrosive liquids or iron-free applications. Precision feeding unit “Iretaro”: A mobile, tank-integrated SMP system with control board for flexible operations. LCD Injector: Precisely feeds liquefied CO₂ for plastic foaming, with temperature regulation. Portable unit: Ready-to-use SMP (HYM model) with motor, speed controller, and touchscreen interface. Control system: Dedicated software for managing up to 5 pumps remotely via PC. --> 📄 Catalog Download (PDF)",
+      "img": "",
+      "images": [
+        "",
+        "https://www.manetco.be/web/image/12841-46e66a1b/Supermetering%20pump.webp",
+        "https://www.height8tech.com/wph8admin/wp-content/uploads/2025/02/task-1050-__-blog-post.jpg"
+      ],
+      "videos": [],
+      "pdf": "https://www.flom.co.jp/eng/pdf/flom_catalog_e.pdf",
+      "sourceUrl": "https://www.skylifesciencessolutions.com/super-metering-pump.php"
+    },
+    {
+      "id": "p-1781813584687",
+      "name": "Sky Life Sciences Solutions - Complete Product Catalog ",
+      "category": "complete-catalog",
+      "desc": "Sky Life Sciences Solutions-offers advanced technologies for continuous flow chemistry, pharmaceutical process development, and industrial-scale manufacturing. Our portfolio includes Corning flow reactors, process development systems, dosing lines, Zaiput liquid-liquid and gas-liquid separators, extraction platforms, heterogeneous catalysis reactors, crystallization systems, partition chromatography solutions, back pressure regulators, pumps, analytical tools, and biopharmaceutical processing equipment. These solutions help pharmaceutical, chemical, and life sciences organizations improve process efficiency, scalability, safety, product quality, and manufacturing performance from laboratory research through commercial production.\n\n\nYou can view/download our complete catalog for 2026 From here!",
+      "img": "",
+      "pdf": "file:///C:/Users/B%20KESHAV/.gemini/antigravity-ide/scratch/skylife-sciences/public/sky%20solutions%20final%20catalogue.pdf",
+      "slug": "sky-life-sciences-solutions-complete-product-catalog",
+      "technicalOverview": ""
+    }
+  ],
+  "dynamicSections": [
+    {
+      "id": "ds-1",
+      "type": "text",
+      "title": "Vision",
+      "subtitle": "",
+      "text": "“To become the preferred global partner for intelligent manufacturing solutions, enabling industries to embrace continuous processing, artificial intelligence, digitalization, and green technologies to achieve operational excellence and sustainability.”"
+    },
+    {
+      "id": "ds-1781813967581",
+      "type": "text",
+      "title": "Mission",
+      "subtitle": "",
+      "text": "“At Sky Lifesciences Solutions, our mission is to empower industries with advanced continuous manufacturing, flow chemistry, process intensification, AI-enabled process optimization, and sustainable technologies that accelerate innovation, improve product quality, enhance safety, and reduce environmental impact.”",
+      "img": "",
+      "align": "right",
+      "videoUrl": "",
+      "buttonText": "Learn More",
+      "buttonLink": "contact",
+      "background": "linear-gradient(135deg, #0f172a 0%, #136B36 100%)",
+      "stats": []
+    },
+    {
+      "id": "ds-3",
+      "type": "cta",
+      "title": "Ready to Transform Your Processing?",
+      "subtitle": "DISCOVER CONTINUOUS FLOW SAVINGS",
+      "buttonText": "Inquire Technical Setup",
+      "buttonLink": "contact",
+      "background": "linear-gradient(135deg, #89CFF0 0%, #4682B4 100%)"
+    }
+  ],
+  "homepageLayout": [
+    {
+      "id": "hero",
+      "name": "Hero Banner",
+      "visible": true
+    },
+    {
+      "id": "products",
+      "name": "Our Products",
+      "visible": true
+    },
+    {
+      "id": "dynamic-sections",
+      "name": "Flexible Content Blocks",
+      "visible": true
+    },
+    {
+      "id": "who-we-are",
+      "name": "Who We Are",
+      "visible": true
+    },
+    {
+      "id": "services",
+      "name": "Our Services",
+      "visible": true
+    },
+    {
+      "id": "highlights",
+      "name": "Recent Highlights & Achievements",
+      "visible": true
+    },
+    {
+      "id": "statistics",
+      "name": "Statistics Counters",
+      "visible": true
+    },
+    {
+      "id": "cta",
+      "name": "Call to Action Banner",
+      "visible": true
+    }
+  ]
+}
