@@ -126,8 +126,26 @@ export default function ProductModal({ isOpen, onClose, category, products = [],
                         <button
                           className="btn-text"
                           onClick={() => {
-                            onClose();
-                            onOpenContact();
+                            const recipient = "shylender@skylifesciencessolutions.com";
+                            const subject = `Product Enquiry - ${product.name}`;
+                            const body = `Hello Sky Life Sciences Solutions,
+
+I would like more information regarding:
+
+${product.name}
+
+Company:
+
+Name:
+
+Phone Number:
+
+Email:
+
+Message:
+
+Thank you.`;
+                            window.location.href = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                           }}
                           style={{ fontSize: '13px' }}
                         >

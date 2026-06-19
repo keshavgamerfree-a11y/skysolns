@@ -137,6 +137,10 @@ export default function ProductDetailView({ product, category, onOpenContact, on
   const [lightboxZoom, setLightboxZoom] = useState(1);
   const [activeTab, setActiveTab] = useState('overview');
 
+  const [isBrochureLightboxOpen, setIsBrochureLightboxOpen] = useState(false);
+  const [brochureLightboxIndex, setBrochureLightboxIndex] = useState(0);
+  const [brochureLightboxZoom, setBrochureLightboxZoom] = useState(1);
+
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
 
@@ -151,15 +155,25 @@ export default function ProductDetailView({ product, category, onOpenContact, on
   const handleTouchEnd = () => {
     const diff = touchStartX - touchEndX;
     if (diff > 50) {
-      setLightboxIndex(prev => (prev + 1) % galleryMedia.length);
-      setLightboxZoom(1);
+      if (isLightboxOpen) {
+        setLightboxIndex(prev => (prev + 1) % galleryMedia.length);
+        setLightboxZoom(1);
+      } else if (isBrochureLightboxOpen) {
+        setBrochureLightboxIndex(prev => (prev + 1) % brochureImages.length);
+        setBrochureLightboxZoom(1);
+      }
     } else if (diff < -50) {
-      setLightboxIndex(prev => (prev - 1 + galleryMedia.length) % galleryMedia.length);
-      setLightboxZoom(1);
+      if (isLightboxOpen) {
+        setLightboxIndex(prev => (prev - 1 + galleryMedia.length) % galleryMedia.length);
+        setLightboxZoom(1);
+      } else if (isBrochureLightboxOpen) {
+        setBrochureLightboxIndex(prev => (prev - 1 + brochureImages.length) % brochureImages.length);
+        setBrochureLightboxZoom(1);
+      }
     }
   };
 
-  // Compile unified media list for showcase and slideshow Lightbox
+  // Compile unified media list for showcase and slideshow Lightbox (product media only)
   const galleryMedia = [];
   
   if (product) {
@@ -174,51 +188,73 @@ export default function ProductDetailView({ product, category, onOpenContact, on
     videos.forEach(url => {
       if (url) galleryMedia.push({ type: 'video', url, label: 'Video Demo' });
     });
-
-    // 3. Add brochure images
-    const brochureImages = product.brochureImages || [];
-    brochureImages.forEach((url, index) => {
-      if (url) galleryMedia.push({ type: 'image', url, label: `Brochure P.${index + 1}` });
-    });
   }
 
-  // Keyboard navigation listener for the slideshow Lightbox
-  useEffect(() => {
-    if (!isLightboxOpen || !product) return;
+  const brochureImages = product?.brochureImages || [];
 
+  // Keyboard navigation listener for the slideshow Lightbox and Brochure Lightbox
+  useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') {
-        setLightboxIndex(prev => (prev - 1 + galleryMedia.length) % galleryMedia.length);
-        setLightboxZoom(1);
-      } else if (e.key === 'ArrowRight') {
-        setLightboxIndex(prev => (prev + 1) % galleryMedia.length);
-        setLightboxZoom(1);
-      } else if (e.key === 'Escape') {
-        setIsLightboxOpen(false);
+      if (isLightboxOpen) {
+        if (e.key === 'ArrowLeft') {
+          setLightboxIndex(prev => (prev - 1 + galleryMedia.length) % galleryMedia.length);
+          setLightboxZoom(1);
+        } else if (e.key === 'ArrowRight') {
+          setLightboxIndex(prev => (prev + 1) % galleryMedia.length);
+          setLightboxZoom(1);
+        } else if (e.key === 'Escape') {
+          setIsLightboxOpen(false);
+        }
+      } else if (isBrochureLightboxOpen) {
+        if (e.key === 'ArrowLeft') {
+          setBrochureLightboxIndex(prev => (prev - 1 + brochureImages.length) % brochureImages.length);
+          setBrochureLightboxZoom(1);
+        } else if (e.key === 'ArrowRight') {
+          setBrochureLightboxIndex(prev => (prev + 1) % brochureImages.length);
+          setBrochureLightboxZoom(1);
+        } else if (e.key === 'Escape') {
+          setIsBrochureLightboxOpen(false);
+        }
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    if (isLightboxOpen || isBrochureLightboxOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isLightboxOpen, galleryMedia.length, product]);
+  }, [isLightboxOpen, isBrochureLightboxOpen, galleryMedia.length, brochureImages.length]);
 
   if (!product) return null;
 
-  const brochureImages = product.brochureImages || [];
   const currentMedia = galleryMedia[activeMediaIndex] || null;
   const specs = product.specifications || {};
   const hasSpecs = Object.keys(specs).length > 0;
   const features = product.features || [];
   const applications = product.applications || [];
 
-  // Contact Us handler (opens ContactModal with context)
+  // Contact Us handler (opens email app directly)
   const handleContactClick = () => {
-    if (onOpenContact) {
-      onOpenContact({
-        productName: product.name,
-        categoryName: category?.title || ''
-      });
-    }
+    const recipient = "shylender@skylifesciencessolutions.com";
+    const subject = `Product Enquiry - ${product.name}`;
+    const body = `Hello Sky Life Sciences Solutions,
+
+I would like more information regarding:
+
+${product.name}
+
+Company:
+
+Name:
+
+Phone Number:
+
+Email:
+
+Message:
+
+Thank you.`;
+
+    window.location.href = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (
@@ -349,54 +385,43 @@ export default function ProductDetailView({ product, category, onOpenContact, on
                   Request Information / Quote
                 </button>
 
-                {product.pdf ? (
-                  <>
-                    <button 
-                      onClick={() => setShowPdfModal(true)} 
-                      className="btn btn-primary"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--accent-blue)', color: '#FFF', cursor: 'pointer', border: 'none', borderRadius: '4px' }}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>
-                      View Brochure PDF
-                    </button>
-                    <a 
-                      href={product.pdf} 
-                      download
-                      className="btn btn-secondary"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', borderRadius: '4px' }}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                      </svg>
-                      Download PDF
-                    </a>
-                  </>
-                ) : brochureImages.length > 0 ? (
+                {(product.pdf || brochureImages.length > 0) && (
                   <button 
                     onClick={() => {
-                      const firstBrochureIdx = galleryMedia.findIndex(m => m.label.startsWith('Brochure'));
-                      if (firstBrochureIdx !== -1) {
-                        setActiveMediaIndex(firstBrochureIdx);
-                        setLightboxIndex(firstBrochureIdx);
-                        setIsLightboxOpen(true);
-                        setLightboxZoom(1);
+                      if (product.pdf) {
+                        setShowPdfModal(true);
+                      } else {
+                        setBrochureLightboxIndex(0);
+                        setIsBrochureLightboxOpen(true);
+                        setBrochureLightboxZoom(1);
                       }
                     }} 
                     className="btn btn-primary"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--accent-purple)', color: '#FFF', cursor: 'pointer', border: 'none', borderRadius: '4px' }}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--accent-blue)', color: '#FFF', cursor: 'pointer', border: 'none', borderRadius: '4px' }}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
-                    View Brochure Sheets
+                    View Brochure
                   </button>
-                ) : null}
+                )}
+
+                {product.pdf && (
+                  <a 
+                    href={product.pdf} 
+                    download
+                    className="btn btn-secondary"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', borderRadius: '4px' }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download PDF
+                  </a>
+                )}
               </div>
 
               {/* Overview snippet description */}
@@ -405,11 +430,6 @@ export default function ProductDetailView({ product, category, onOpenContact, on
                 <p style={{ fontSize: '15.5px', color: 'var(--text-secondary)', lineHeight: '1.65' }}>
                   {product.desc ? (product.desc.split('\n')[0] || '') : ''}
                 </p>
-                {!product.pdf && brochureImages.length > 0 && (
-                  <p style={{ fontSize: '13px', color: 'var(--accent-purple)', fontWeight: '600', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    📖 Image-based brochure catalog sheets are accessible directly in the photo showcase.
-                  </p>
-                )}
               </div>
 
               {/* Direct support information block */}
@@ -750,6 +770,124 @@ export default function ProductDetailView({ product, category, onOpenContact, on
           <div className="lightbox-footer" onClick={(e) => e.stopPropagation()}>
             <p className="lightbox-info">
               Image {lightboxIndex + 1} of {galleryMedia.length} — Use Left/Right arrow keys to navigate
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Brochure Lightbox Overlay */}
+      {isBrochureLightboxOpen && (
+        <div 
+          className="premium-lightbox" 
+          onClick={() => setIsBrochureLightboxOpen(false)}
+        >
+          {/* Header toolbar */}
+          <div className="lightbox-header" onClick={(e) => e.stopPropagation()}>
+            <h4 className="lightbox-title">
+              {product.name} - Brochure Page {brochureLightboxIndex + 1}
+            </h4>
+            <div className="lightbox-controls">
+              <button 
+                type="button"
+                className="lightbox-btn"
+                onClick={() => setBrochureLightboxZoom(prev => Math.max(prev - 0.25, 0.75))}
+              >
+                ➖ Zoom Out
+              </button>
+              <button 
+                type="button"
+                className="lightbox-btn"
+                onClick={() => setBrochureLightboxZoom(1)}
+              >
+                1:1 Reset
+              </button>
+              <button 
+                type="button"
+                className="lightbox-btn"
+                onClick={() => setBrochureLightboxZoom(prev => Math.min(prev + 0.25, 2.5))}
+              >
+                ➕ Zoom In
+              </button>
+              <button 
+                type="button"
+                className="lightbox-btn lightbox-close"
+                onClick={() => setIsBrochureLightboxOpen(false)}
+              >
+                ✕ Close
+              </button>
+            </div>
+          </div>
+
+          {/* Lightbox center body */}
+          <div 
+            className="lightbox-body" 
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={(e) => {
+              setTouchStartX(e.targetTouches[0].clientX);
+            }}
+            onTouchMove={(e) => {
+              setTouchEndX(e.targetTouches[0].clientX);
+            }}
+            onTouchEnd={() => {
+              const diff = touchStartX - touchEndX;
+              if (diff > 50) {
+                setBrochureLightboxIndex(prev => (prev + 1) % brochureImages.length);
+                setBrochureLightboxZoom(1);
+              } else if (diff < -50) {
+                setBrochureLightboxIndex(prev => (prev - 1 + brochureImages.length) % brochureImages.length);
+                setBrochureLightboxZoom(1);
+              }
+            }}
+          >
+            {/* Left navigation arrow */}
+            {brochureImages.length > 1 && (
+              <button 
+                type="button"
+                className="lightbox-arrow lightbox-arrow-left"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setBrochureLightboxIndex(prev => (prev - 1 + brochureImages.length) % brochureImages.length);
+                  setBrochureLightboxZoom(1);
+                }}
+              >
+                ‹
+              </button>
+            )}
+
+            {/* Main image inside Lightbox */}
+            {brochureImages[brochureLightboxIndex] && (
+              <img
+                src={brochureImages[brochureLightboxIndex]}
+                alt="Enlarged brochure sheet"
+                className="lightbox-main-img"
+                style={{
+                  transform: `scale(${brochureLightboxZoom})`,
+                  cursor: brochureLightboxZoom > 1 ? 'grab' : 'zoom-in'
+                }}
+                onClick={() => setBrochureLightboxZoom(prev => prev > 1 ? 1 : 1.5)}
+              />
+            )}
+
+            {/* Right navigation arrow */}
+            {brochureImages.length > 1 && (
+              <button 
+                type="button"
+                className="lightbox-arrow lightbox-arrow-right"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setBrochureLightboxIndex(prev => (prev + 1) % brochureImages.length);
+                  setBrochureLightboxZoom(1);
+                }}
+              >
+                ›
+              </button>
+            )}
+          </div>
+
+          {/* Footer info strip */}
+          <div className="lightbox-footer" onClick={(e) => e.stopPropagation()}>
+            <p className="lightbox-info">
+              Image {brochureLightboxIndex + 1} of {brochureImages.length} — Use Left/Right arrow keys or swipe to navigate
             </p>
           </div>
         </div>

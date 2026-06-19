@@ -8,39 +8,59 @@ export default function WhatWeDo({ content, onOpenContact }) {
   // Support both new whatWeDo section structure and legacy sales solutions list
   const sections = content?.whatWeDo?.sections || content?.sales?.solutions || [
     {
+      id: "sec-1",
       title: "Continuous Manufacturing",
       description: "Replacing traditional batch processes with continuous systems to increase safety, reliability, and scale-up velocity.",
-      icon: "activity"
+      icon: "activity",
+      image: "/uploads/image_1781809851311.png",
+      video: "",
+      backgroundImage: "",
+      ctaButtonText: "Request Consultation",
+      ctaButtonLink: "#contact"
     },
     {
+      id: "sec-2",
       title: "Flow Chemistry Solutions",
       description: "Patented channel structures enabling high mass transfer, rapid temperature regulation, and highly automated chemistry.",
-      icon: "flask"
+      icon: "flask",
+      image: "/uploads/image_1781646472327.png",
+      video: "",
+      backgroundImage: "",
+      ctaButtonText: "Learn More",
+      ctaButtonLink: "#contact"
     },
     {
+      id: "sec-3",
       title: "Advanced Separation Technologies",
       description: "Membrane-based continuous separation solutions to handle demanding liquid extraction and emulsion breaks.",
-      icon: "separation"
+      icon: "separation",
+      image: "/uploads/image_1781649446059.png",
+      video: "",
+      backgroundImage: "",
+      ctaButtonText: "Learn More",
+      ctaButtonLink: "#contact"
     },
     {
+      id: "sec-4",
       title: "Continuous Crystallization",
       description: "Multi-stage systems providing exceptional crystal purity, consistent growth kinetics, and stable scales.",
-      icon: "chromatography"
+      icon: "chromatography",
+      image: "/uploads/image_1781813102263.png",
+      video: "",
+      backgroundImage: "",
+      ctaButtonText: "Learn More",
+      ctaButtonLink: "#contact"
     },
     {
-      title: "AI & Digital Manufacturing",
-      description: "Integrating predictive models and online sensors for real-time process monitoring, run automation, and analytics.",
-      icon: "cpu"
-    },
-    {
+      id: "sec-6",
       title: "Sustainability & Green Chemistry",
       description: "Low-footprint designs aimed at minimizing raw material usage, waste generation, and solvent consumption.",
-      icon: "globe"
-    },
-    {
-      title: "Engineering & Consulting",
-      description: "Comprehensive engineering support from basic feasibility and process optimization up to plant commissioning.",
-      icon: "engineering"
+      icon: "globe",
+      image: "/uploads/vecteezy_biotechnology-concept-with-green-plant-leaves-laboratory_29282892-scaled-1_1781817959707.jpg",
+      video: "",
+      backgroundImage: "",
+      ctaButtonText: "Learn More",
+      ctaButtonLink: "#contact"
     }
   ];
 

@@ -95,7 +95,9 @@ export default function Services({ services: propServices, navigateTo, onOpenCon
 
   const handleLearnMore = (svc) => {
     if (!svc.learnMore || svc.learnMore === '' || svc.learnMore === '#contact') {
-      if (onOpenContact) onOpenContact();
+      const recipient = "shylender@skylifesciencessolutions.com";
+      const subject = `Service Enquiry - ${svc.title}`;
+      window.location.href = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}`;
     } else if (svc.learnMore.startsWith('#')) {
       const el = document.getElementById(svc.learnMore.substring(1));
       if (el) el.scrollIntoView({ behavior: 'smooth' });

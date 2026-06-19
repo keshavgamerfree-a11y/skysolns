@@ -37,6 +37,21 @@ export default function CategoryView({ category, products = [], onSelectProduct,
               <p className="section-subtitle" style={{ margin: 0, maxWidth: '800px', fontSize: '15.5px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
                 {category.desc}
               </p>
+              <button 
+                className="btn btn-primary"
+                onClick={() => {
+                  const recipient = "shylender@skylifesciencessolutions.com";
+                  const subject = `Category Enquiry - ${category.title}`;
+                  window.location.href = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}`;
+                }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', borderRadius: '4px', marginTop: '20px' }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                Enquire about Category
+              </button>
             </div>
             {category.img && (
               <div style={{ 
