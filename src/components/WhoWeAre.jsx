@@ -232,7 +232,6 @@ export default function WhoWeAre({ highlights: propHighlights, description, mode
     if (!trackRef.current) return;
     const track = trackRef.current;
     const scrollWidth = track.scrollWidth;
-    const clientWidth = track.clientWidth;
     const singleSetWidth = scrollWidth / 3;
 
     if (track.scrollLeft < 10) {

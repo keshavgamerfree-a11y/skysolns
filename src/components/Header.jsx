@@ -4,7 +4,6 @@ export default function Header({
   onOpenContact, 
   onOpenLang, 
   currentLang = "English", 
-  currentView,
   currentPath,
   navigateTo,
   categories,
@@ -14,6 +13,7 @@ export default function Header({
   const [isSticky, setIsSticky] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMobileCat, setActiveMobileCat] = useState(null);
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -241,9 +241,35 @@ export default function Header({
             </div>
 
             <div className="nav-item">
-              <a href="#who-we-are" onClick={(e) => handleNavClick(e, '/', 'who-we-are')} className="nav-link">
+              <span className="nav-link" style={{ cursor: 'pointer' }}>
                 About Us
-              </a>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+              <div className="nav-dropdown" style={{ minWidth: '220px' }}>
+                <a
+                  href="/"
+                  onClick={(e) => handleNavClick(e, '/', 'highlights')}
+                  className="dropdown-link"
+                >
+                  Company Highlights
+                </a>
+                <a
+                  href="/about-the-director"
+                  onClick={(e) => handleNavClick(e, '/about-the-director')}
+                  className="dropdown-link"
+                >
+                  About The Director
+                </a>
+                <a
+                  href="/careers"
+                  onClick={(e) => handleNavClick(e, '/careers')}
+                  className="dropdown-link"
+                >
+                  Careers
+                </a>
+              </div>
             </div>
           </nav>
 
@@ -432,7 +458,46 @@ export default function Header({
 
               <a href="/what-we-do" className="drawer-link" onClick={(e) => handleNavClick(e, '/what-we-do')}>What We Do</a>
               <a href="#services" className="drawer-link" onClick={(e) => handleNavClick(e, '/', 'services')}>Services</a>
-              <a href="#who-we-are" className="drawer-link" onClick={(e) => handleNavClick(e, '/', 'who-we-are')}>About Us</a>
+              
+              {/* Accordion About Us for Mobile */}
+              <div className="mobile-drawer-cat-item" style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', marginBottom: '10px' }}>
+                <button
+                  className="drawer-cat-btn"
+                  onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
+                  style={{ width: '100%', textAlign: 'left', padding: '10px 14px', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'none', border: 'none' }}
+                >
+                  About Us
+                  <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{mobileAboutOpen ? '▼' : '▶'}</span>
+                </button>
+                {mobileAboutOpen && (
+                  <div className="drawer-submenu" style={{ backgroundColor: '#F8F9FA', paddingLeft: '15px' }}>
+                    <a
+                      href="/"
+                      className="drawer-submenu-link"
+                      onClick={(e) => handleNavClick(e, '/', 'highlights')}
+                      style={{ display: 'block', padding: '8px 20px', fontSize: '13px', color: 'var(--text-secondary)', borderBottom: 'none' }}
+                    >
+                      Company Highlights
+                    </a>
+                    <a
+                      href="/about-the-director"
+                      className="drawer-submenu-link"
+                      onClick={(e) => handleNavClick(e, '/about-the-director')}
+                      style={{ display: 'block', padding: '8px 20px', fontSize: '13px', color: 'var(--text-secondary)', borderBottom: 'none' }}
+                    >
+                      About The Director
+                    </a>
+                    <a
+                      href="/careers"
+                      className="drawer-submenu-link"
+                      onClick={(e) => handleNavClick(e, '/careers')}
+                      style={{ display: 'block', padding: '8px 20px', fontSize: '13px', color: 'var(--text-secondary)', borderBottom: 'none' }}
+                    >
+                      Careers
+                    </a>
+                  </div>
+                )}
+              </div>
             </nav>
 
             <div className="drawer-utilities">

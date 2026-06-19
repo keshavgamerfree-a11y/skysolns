@@ -1,28 +1,39 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function ContactModal({ isOpen, onClose }) {
+export default function ContactModal({ isOpen, onClose, context }) {
   const [formData, setFormData] = useState({
     x_name: '',
     x_email: '',
+    x_phone: '',
     x_org: '',
     x_ind: '',
     x_msg: ''
   });
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const validate = () => {
     const newErrors = {};
     if (!formData.x_name.trim()) newErrors.x_name = 'Name is required';
+    
     if (!formData.x_email.trim()) {
       newErrors.x_email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.x_email)) {
       newErrors.x_email = 'Invalid email address';
     }
+    
+    if (!formData.x_phone.trim()) {
+      newErrors.x_phone = 'Phone number is required';
+    } else if (!/^\+?[0-9\s\-()]{7,20}$/.test(formData.x_phone)) {
+      newErrors.x_phone = 'Invalid phone number format';
+    }
+    
     if (!formData.x_org.trim()) newErrors.x_org = 'Organization is required';
     if (!formData.x_ind) newErrors.x_ind = 'Please select your industry';
-    if (!formData.x_msg.trim()) newErrors.x_msg = 'Message is required';
+    if (!formData.x_msg.trim()) newErrors.x_msg = 'Inquiry details are required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -30,19 +41,50 @@ export default function ContactModal({ isOpen, onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSubmitError('');
     if (validate()) {
-      // Mock submit
-      setIsSubmitted(true);
-      setTimeout(() => {
-        // Clear form after success
-        setFormData({
-          x_name: '',
-          x_email: '',
-          x_org: '',
-          x_ind: '',
-          x_msg: ''
+      setIsSubmitting(true);
+      
+      const payload = {
+        name: formData.x_name,
+        company: formData.x_org,
+        phone: formData.x_phone,
+        email: formData.x_email,
+        message: formData.x_msg,
+        productName: context?.productName || '',
+        serviceName: context?.serviceName || '',
+        categoryName: context?.categoryName || '',
+        pageUrl: window.location.href,
+        timestamp: new Date().toISOString()
+      };
+
+      fetch('/api/enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(async (res) => {
+          const data = await res.json();
+          if (res.ok) {
+            setIsSubmitted(true);
+            setFormData({
+              x_name: '',
+              x_email: '',
+              x_phone: '',
+              x_org: '',
+              x_ind: '',
+              x_msg: ''
+            });
+          } else {
+            setSubmitError(data.error || 'Failed to submit enquiry. Please try again.');
+          }
+        })
+        .catch((err) => {
+          setSubmitError('Connection error: ' + err.message);
+        })
+        .finally(() => {
+          setIsSubmitting(false);
         });
-      }, 500);
     }
   };
 
@@ -71,6 +113,7 @@ export default function ContactModal({ isOpen, onClose }) {
             exit={{ scale: 0.95, y: 20 }}
             transition={{ type: 'spring', duration: 0.5 }}
             onClick={(e) => e.stopPropagation()}
+            style={{ maxHeight: '90vh', overflowY: 'auto' }}
           >
             <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -82,11 +125,24 @@ export default function ContactModal({ isOpen, onClose }) {
             {!isSubmitted ? (
               <>
                 <h3 className="modal-title">Connect with <strong>Skylife Solutions</strong></h3>
-                <p className="modal-subtitle">Write to us regarding your Requirements </p>
+                <p className="modal-subtitle">
+                  {context?.productName 
+                    ? `Write to us regarding: ${context.productName}`
+                    : context?.serviceName
+                      ? `Write to us regarding: ${context.serviceName}`
+                      : 'Write to us regarding your Requirements'
+                  }
+                </p>
+
+                {submitError && (
+                  <div className="form-error" style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#FEE2E2', color: '#DC2626', borderRadius: '4px', fontSize: '13px' }}>
+                    ⚠️ {submitError}
+                  </div>
+                )}
 
                 <form onSubmit={handleSubmit} autoComplete="off">
                   <div className="form-group">
-                    <label className="form-label">Full Name</label>
+                    <label className="form-label">Full Name *</label>
                     <input
                       type="text"
                       name="x_name"
@@ -94,25 +150,44 @@ export default function ContactModal({ isOpen, onClose }) {
                       onChange={handleChange}
                       className="form-control"
                       autoComplete="off"
+                      disabled={isSubmitting}
                     />
                     {errors.x_name && <span className="form-error">{errors.x_name}</span>}
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Work Email</label>
-                    <input
-                      type="email"
-                      name="x_email"
-                      value={formData.x_email}
-                      onChange={handleChange}
-                      className="form-control"
-                      autoComplete="off"
-                    />
-                    {errors.x_email && <span className="form-error">{errors.x_email}</span>}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div className="form-group">
+                      <label className="form-label">Work Email *</label>
+                      <input
+                        type="email"
+                        name="x_email"
+                        value={formData.x_email}
+                        onChange={handleChange}
+                        className="form-control"
+                        autoComplete="off"
+                        disabled={isSubmitting}
+                      />
+                      {errors.x_email && <span className="form-error">{errors.x_email}</span>}
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Phone Number *</label>
+                      <input
+                        type="tel"
+                        name="x_phone"
+                        value={formData.x_phone}
+                        onChange={handleChange}
+                        className="form-control"
+                        placeholder="+91 99000 00000"
+                        autoComplete="off"
+                        disabled={isSubmitting}
+                      />
+                      {errors.x_phone && <span className="form-error">{errors.x_phone}</span>}
+                    </div>
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Organization</label>
+                    <label className="form-label">Organization / Company *</label>
                     <input
                       type="text"
                       name="x_org"
@@ -120,17 +195,19 @@ export default function ContactModal({ isOpen, onClose }) {
                       onChange={handleChange}
                       className="form-control"
                       autoComplete="off"
+                      disabled={isSubmitting}
                     />
                     {errors.x_org && <span className="form-error">{errors.x_org}</span>}
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Industry Segment</label>
+                    <label className="form-label">Industry Segment *</label>
                     <select
                       name="x_ind"
                       value={formData.x_ind}
                       onChange={handleChange}
                       className="form-control"
+                      disabled={isSubmitting}
                     >
                       <option value="">Select Industry...</option>
                       <option value="Pharmaceuticals">Pharmaceuticals</option>
@@ -146,20 +223,32 @@ export default function ContactModal({ isOpen, onClose }) {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Inquiry Details</label>
+                    <label className="form-label">Inquiry Details *</label>
                     <textarea
                       name="x_msg"
                       value={formData.x_msg}
                       onChange={handleChange}
-                      rows="4"
+                      rows="3"
                       className="form-control"
                       autoComplete="off"
+                      disabled={isSubmitting}
+                      placeholder="Specify your requirements, product interest, volume, etc..."
                     ></textarea>
                     {errors.x_msg && <span className="form-error">{errors.x_msg}</span>}
                   </div>
 
-                  <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '10px' }}>
-                    Submit Inquiry
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary" 
+                    style={{ width: '100%', marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="admin-spinner" style={{ width: '14px', height: '14px', borderLeftColor: '#fff' }}></span>
+                        Submitting Inquiry...
+                      </>
+                    ) : 'Submit Inquiry'}
                   </button>
                 </form>
               </>
@@ -178,7 +267,7 @@ export default function ContactModal({ isOpen, onClose }) {
                 </div>
                 <h3 className="modal-title" style={{ marginBottom: '10px' }}>Inquiry Submitted</h3>
                 <p className="modal-subtitle" style={{ maxWidth: '400px', margin: '0 auto' }}>
-                  Thank you for contacting Skylife Sciences Solutions. A technical representative will review your request and contact you shortly.
+                  Thank you for contacting Skylife Sciences Solutions. Your request has been securely logged, and an email notification has been dispatched to our sales representatives. A technical coordinator will contact you shortly.
                 </p>
                 <button
                   className="btn btn-secondary"

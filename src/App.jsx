@@ -20,15 +20,23 @@ import ProductsView from './components/ProductsView';
 import CategoryView from './components/CategoryView';
 import ProductDetailView from './components/ProductDetailView';
 import DynamicSections from './components/DynamicSections';
+import AboutDirector from './components/AboutDirector';
+import Careers from './components/Careers';
 
 import './App.css';
 
 function App() {
   const [contactOpen, setContactOpen] = useState(false);
+  const [contactContext, setContactContext] = useState(null);
   const [langOpen, setLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("English (Global)");
   const [content, setContent] = useState(null);
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  const openContactWithContext = (context = null) => {
+    setContactContext(context);
+    setContactOpen(true);
+  };
 
   // Fetch dynamic content on mount
   useEffect(() => {
@@ -98,6 +106,10 @@ function App() {
     currentView = 'admin';
   } else if (currentPath === '/sales' || currentPath === '/what-we-do') {
     currentView = 'what-we-do';
+  } else if (currentPath === '/about-the-director') {
+    currentView = 'about-the-director';
+  } else if (currentPath === '/careers') {
+    currentView = 'careers';
   } else if (parts[0] === 'products') {
     if (parts.length === 1) {
       currentView = 'products-index';
@@ -230,7 +242,11 @@ function App() {
               </>
             ) : currentView === 'what-we-do' ? (
               /* What We Do solutions and innovation commitments */
-              <WhatWeDo content={content} onOpenContact={() => setContactOpen(true)} />
+              <WhatWeDo content={content} onOpenContact={() => openContactWithContext()} />
+            ) : currentView === 'about-the-director' ? (
+              <AboutDirector content={content?.director} onOpenContact={openContactWithContext} />
+            ) : currentView === 'careers' ? (
+              <Careers content={content?.careers} onOpenContact={openContactWithContext} />
             ) : currentView === 'products-index' ? (
               /* Products Index View */
               <ProductsView
@@ -250,6 +266,7 @@ function App() {
               <ProductDetailView
                 product={content?.products?.find(p => p.slug === activeProductSlug || p.id === activeProductSlug)}
                 category={content?.categories?.find(c => c.id === content?.products?.find(p => p.slug === activeProductSlug || p.id === activeProductSlug)?.category)}
+                onOpenContact={openContactWithContext}
                 onBackToCategory={() => {
                   const prod = content?.products?.find(p => p.slug === activeProductSlug || p.id === activeProductSlug);
                   const cat = content?.categories?.find(c => c.id === prod?.category);
@@ -279,7 +296,8 @@ function App() {
 
       <ContactModal 
         isOpen={contactOpen} 
-        onClose={() => setContactOpen(false)} 
+        onClose={() => { setContactOpen(false); setContactContext(null); }} 
+        context={contactContext}
       />
       
       <LangModal 

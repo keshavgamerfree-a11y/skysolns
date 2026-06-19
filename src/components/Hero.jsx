@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const EMPTY_ARRAY = [];
+
 export default function Hero({ content, onOpenContact }) {
   const title = content?.title || '<span style="color: #136B36">SKY LIFE SCIENCES</span> <span style="color: var(--accent-blue)">SOLUTIONS</span>';
   const desc = content?.desc || 'We provide exceptional analytical solutions to solve the toughest Research and Development challenges in Pharmaceutical, Biotech and Life sciences companies with a wide range of high quality, sustainability as well as innovative next-generation Laboratory products.';
@@ -11,7 +13,7 @@ export default function Hero({ content, onOpenContact }) {
   const bgUrl = content?.bgUrl || '/hero-bg.png';
   const mediaType = content?.mediaType || 'video'; // 'video' | 'image' | 'slideshow'
   const mediaUrl = content?.mediaUrl || 'https://www.youtube.com/embed/r5ywq0hrWf0?si=whowPvpJ4gfUhv68';
-  const slideshowImages = content?.slideshowImages || [];
+  const slideshowImages = content?.slideshowImages || EMPTY_ARRAY;
 
   const [slideIdx, setSlideIdx] = useState(0);
 

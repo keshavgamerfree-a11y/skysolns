@@ -247,8 +247,10 @@ function AlternatingSection({ title, children, media, name, isLeftMedia, isAltBg
   );
 }
 
-export default function ProductDetailView({ product, category, onBackToCategory, onBackToCategories }) {
+export default function ProductDetailView({ product, category, onOpenContact, onBackToCategory, onBackToCategories }) {
   const [showPdfModal, setShowPdfModal] = useState(false);
+  const [activeBrochureImg, setActiveBrochureImg] = useState(null);
+  const [brochureZoom, setBrochureZoom] = useState(1);
 
   if (!product) return null;
 
@@ -260,12 +262,14 @@ export default function ProductDetailView({ product, category, onBackToCategory,
   const features = product.features || [];
   const applications = product.applications || [];
 
-  // Contact Us email handler
+  // Contact Us handler (opens ContactModal with context)
   const handleContactClick = () => {
-    const to = "shylender@skylifesciencessolutions.com";
-    const subject = encodeURIComponent(`Inquiry - ${product.name}`);
-    const body = encodeURIComponent(`Hello,\n\nI would like to know more about ${product.name}.\n\nRegards`);
-    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+    if (onOpenContact) {
+      onOpenContact({
+        productName: product.name,
+        categoryName: category?.title || ''
+      });
+    }
   };
 
   // Compile media pool
@@ -621,6 +625,112 @@ export default function ProductDetailView({ product, category, onBackToCategory,
                 title="Brochure PDF document"
               />
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Brochure Images Section */}
+      {product.brochureImages && product.brochureImages.length > 0 && (
+        <section className="section" style={{ backgroundColor: 'var(--bg-primary)', padding: '60px 0', borderBottom: '1px solid var(--border-color)' }}>
+          <div className="container">
+            <h3 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '24px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', color: 'var(--text-primary)' }}>
+              Product Brochure Pages
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '20px' }}>
+              {product.brochureImages.map((url, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    backgroundColor: '#fff',
+                    border: '1px solid var(--border-color)',
+                    padding: '8px',
+                    borderRadius: '4px',
+                    cursor: 'zoom-in',
+                    boxShadow: 'var(--shadow-sm)'
+                  }}
+                  onClick={() => {
+                    setActiveBrochureImg(url);
+                    setBrochureZoom(1);
+                  }}
+                >
+                  <img src={url} alt={`Brochure Page ${idx + 1}`} style={{ width: '100%', height: '260px', objectFit: 'cover' }} />
+                  <div style={{ textAlign: 'center', fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: '600' }}>
+                    Page {idx + 1}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Lightbox for Brochure Images */}
+      {activeBrochureImg && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: 'rgba(11, 15, 25, 0.9)',
+          backdropFilter: 'blur(8px)',
+          zIndex: 99999,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }} onClick={() => setActiveBrochureImg(null)}>
+          {/* Toolbar */}
+          <div style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            display: 'flex',
+            gap: '12px',
+            zIndex: 10
+          }} onClick={(e) => e.stopPropagation()}>
+            <button 
+              onClick={(e) => { e.stopPropagation(); setBrochureZoom(prev => Math.max(prev - 0.25, 0.75)); }} 
+              style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none', padding: '10px 14px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              ➖
+            </button>
+            <button 
+              onClick={(e) => { e.stopPropagation(); setBrochureZoom(1); }} 
+              style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none', padding: '10px 14px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              1:1
+            </button>
+            <button 
+              onClick={(e) => { e.stopPropagation(); setBrochureZoom(prev => Math.min(prev + 0.25, 2.5)); }} 
+              style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none', padding: '10px 14px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              ➕
+            </button>
+            <button 
+              onClick={() => setActiveBrochureImg(null)} 
+              style={{ backgroundColor: 'var(--accent-purple)', color: '#fff', border: 'none', padding: '10px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              ✕ Close
+            </button>
+          </div>
+
+          {/* Viewport */}
+          <div style={{ overflow: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+            <img
+              src={activeBrochureImg}
+              alt="Zoomed brochure page"
+              style={{
+                maxHeight: '85vh',
+                maxWidth: '85vw',
+                objectFit: 'contain',
+                transform: `scale(${brochureZoom})`,
+                transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                boxShadow: 'var(--shadow-lg)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            />
           </div>
         </div>
       )}

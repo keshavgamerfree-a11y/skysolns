@@ -232,6 +232,41 @@ const defaultLayout = [
   { id: "cta", name: "Call to Action Banner", visible: true }
 ];
 
+const generateImportedProductId = () => 'p-' + Date.now();
+const generateImportedProductSlug = (name) => {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now();
+};
+
+const exportToCSV = (rows) => {
+  const headers = ['Name', 'Company', 'Phone', 'Email', 'Message', 'Product Name', 'Service Name', 'Category Name', 'Page URL', 'Timestamp'];
+  const csvRows = [headers.join(',')];
+  for (const row of rows) {
+    const values = [
+      row.name || '',
+      row.company || '',
+      row.phone || '',
+      row.email || '',
+      row.message || '',
+      row.productName || '',
+      row.serviceName || '',
+      row.categoryName || '',
+      row.pageUrl || '',
+      row.timestamp || ''
+    ].map(v => `"${v.replace(/"/g, '""').replace(/\n/g, ' ')}"`);
+    csvRows.push(values.join(','));
+  }
+  const csvString = csvRows.join('\n');
+  const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `enquiries_export_${Date.now()}.csv`);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -248,6 +283,104 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
   const [activeTab, setActiveTab] = useState('homepage');
   const [homepageSubTab, setHomepageSubTab] = useState('hero');
   const [productsSubTab, setProductsSubTab] = useState('products-list');
+  const [aboutUsSubTab, setAboutUsSubTab] = useState('profile');
+
+  // Enquiries states
+  const [enquiries, setEnquiries] = useState([]);
+  const [activeEnquiry, setActiveEnquiry] = useState(null);
+  const [enquiryFilters, setEnquiryFilters] = useState({
+    product: '',
+    service: '',
+    company: '',
+    date: ''
+  });
+
+  const [newLeadsCount, setNewLeadsCount] = useState(0);
+
+  useEffect(() => {
+    const limit = Date.now() - 24 * 60 * 60 * 1000;
+    const count = enquiries.filter(e => {
+      if (!e.timestamp) return false;
+      try {
+        return new Date(e.timestamp).getTime() > limit;
+      } catch {
+        return false;
+      }
+    }).length;
+    queueMicrotask(() => {
+      setNewLeadsCount(count);
+    });
+  }, [enquiries]);
+
+  const fetchEnquiries = useCallback(() => {
+    fetch('/api/enquiries', {
+      headers: getHeaders()
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Unauthorized');
+        return res.json();
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          setEnquiries(data);
+        }
+      })
+      .catch(err => console.error('Failed to fetch enquiries:', err));
+  }, []);
+
+  const getFilteredEnquiries = () => {
+    return enquiries.filter(enq => {
+      if (productSearch) {
+        const q = productSearch.toLowerCase();
+        const matchesSearch = 
+          enq.name?.toLowerCase().includes(q) ||
+          enq.company?.toLowerCase().includes(q) ||
+          enq.email?.toLowerCase().includes(q) ||
+          enq.phone?.toLowerCase().includes(q) ||
+          enq.message?.toLowerCase().includes(q) ||
+          enq.productName?.toLowerCase().includes(q) ||
+          enq.serviceName?.toLowerCase().includes(q);
+        if (!matchesSearch) return false;
+      }
+      if (enquiryFilters.product && enq.productName !== enquiryFilters.product) {
+        return false;
+      }
+      if (enquiryFilters.company) {
+        const comp = enquiryFilters.company.toLowerCase();
+        if (!enq.company?.toLowerCase().includes(comp)) {
+          return false;
+        }
+      }
+      if (enquiryFilters.date) {
+        const enqDate = new Date(enq.timestamp).toISOString().split('T')[0];
+        if (enqDate !== enquiryFilters.date) {
+          return false;
+        }
+      }
+      return true;
+    });
+  };
+
+  const handleDeleteEnquiry = (id) => {
+    fetch(`/api/enquiries?id=${id}`, {
+      method: 'DELETE',
+      headers: getHeaders()
+    })
+      .then(async res => {
+        if (res.ok) {
+          fetchEnquiries();
+          triggerNotification('Enquiry deleted successfully', 'success');
+        } else {
+          const data = await res.json();
+          triggerNotification(data.error || 'Failed to delete enquiry', 'danger');
+        }
+      })
+      .catch(err => {
+        triggerNotification('Connection error: ' + err.message, 'danger');
+      });
+  };
+
+
 
 
   // Media items list
@@ -387,12 +520,13 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
       .catch(err => console.error('Failed to fetch media library:', err));
   };
 
-  // Fetch media if authenticated on mount / token change
+  // Fetch media and enquiries if authenticated on mount / token change
   useEffect(() => {
     if (isAuthenticated) {
       fetchMedia();
+      fetchEnquiries();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchEnquiries]);
 
   // Show notification alert helper
   const triggerNotification = (message, type = 'success') => {
@@ -435,57 +569,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
     triggerAutoSave(updated);
   };
 
-  const updateSalesField = (field, value) => {
-    const salesCopy = { ...(localContent.sales || {}) };
-    salesCopy[field] = value;
-    const updated = { ...localContent, sales: salesCopy };
-    setLocalContent(updated);
-    triggerAutoSave(updated);
-  };
 
-  const updateSalesSolution = (index, field, value) => {
-    const salesCopy = { ...(localContent.sales || {}) };
-    const sols = [...(salesCopy.solutions || [])];
-    sols[index] = { ...sols[index], [field]: value };
-    salesCopy.solutions = sols;
-    const updated = { ...localContent, sales: salesCopy };
-    setLocalContent(updated);
-    triggerAutoSave(updated);
-  };
-
-  const addSalesSolution = () => {
-    const salesCopy = { ...(localContent.sales || {}) };
-    const sols = [...(salesCopy.solutions || [])];
-    sols.push({ title: "New Solution Area", points: ["New point"] });
-    salesCopy.solutions = sols;
-    const updated = { ...localContent, sales: salesCopy };
-    setLocalContent(updated);
-    triggerAutoSave(updated);
-  };
-
-  const deleteSalesSolution = (index) => {
-    const salesCopy = { ...(localContent.sales || {}) };
-    const sols = [...(salesCopy.solutions || [])];
-    sols.splice(index, 1);
-    salesCopy.solutions = sols;
-    const updated = { ...localContent, sales: salesCopy };
-    setLocalContent(updated);
-    triggerAutoSave(updated);
-  };
-
-  const moveSalesSolution = (index, direction) => {
-    const salesCopy = { ...(localContent.sales || {}) };
-    const sols = [...(salesCopy.solutions || [])];
-    const targetIdx = index + direction;
-    if (targetIdx < 0 || targetIdx >= sols.length) return;
-    const temp = sols[index];
-    sols[index] = sols[targetIdx];
-    sols[targetIdx] = temp;
-    salesCopy.solutions = sols;
-    const updated = { ...localContent, sales: salesCopy };
-    setLocalContent(updated);
-    triggerAutoSave(updated);
-  };
 
   // ─── SERVICE REORDER ─────────────────────────────────────────────────────
   const moveService = (index, direction) => {
@@ -706,7 +790,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
     if (!importPreview) return;
 
     const finalName = importProductName.trim() || importPreview.title || 'Imported Product';
-    const slug = finalName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now();
+    const slug = generateImportedProductSlug(finalName);
 
     // Build combined description from all extracted text sections
     let fullDesc = importPreview.description || '';
@@ -715,7 +799,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
     if (importPreview.faq)          fullDesc += (fullDesc ? '\n\n' : '') + 'FAQ\n' + importPreview.faq;
 
     const newProduct = {
-      id:               'p-' + Date.now(),
+      id:               generateImportedProductId(),
       name:             finalName,
       slug:             slug,
       category:         importCategory,
@@ -855,6 +939,13 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
           imgs[index] = url;
           return { ...prev, images: imgs };
         });
+      } else if (field === 'brochureImages' && index !== null) {
+        setEditingProduct(prev => {
+          if (!prev) return prev;
+          const imgs = [...(prev.brochureImages || [])];
+          imgs[index] = url;
+          return { ...prev, brochureImages: imgs };
+        });
       } else {
         setEditingProduct(prev => prev ? { ...prev, [field]: url } : null);
       }
@@ -900,6 +991,26 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
         triggerAutoSave(updated);
         return updated;
       });
+    } else if (type === 'director') {
+      setLocalContent(prev => {
+        const director = { ...(prev.director || {}) };
+        director[field] = url;
+        const updated = { ...prev, director };
+        triggerAutoSave(updated);
+        return updated;
+      });
+    } else if (type === 'director-gallery') {
+      setLocalContent(prev => {
+        const director = { ...(prev.director || {}) };
+        const gallery = [...(director.gallery || [])];
+        if (index !== null) {
+          gallery[index] = url;
+        }
+        director.gallery = gallery;
+        const updated = { ...prev, director };
+        triggerAutoSave(updated);
+        return updated;
+      });
     }
 
     setMediaPickerTarget(null);
@@ -915,7 +1026,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
     } else if (type === 'hero' || type === 'hero-bg' || type === 'slideshow') {
       setHomepageSubTab('hero');
       setActiveTab('homepage');
-    } else if (type === 'profile') {
+    } else if (type === 'profile' || type === 'director' || type === 'director-gallery') {
       setActiveTab('about-us');
     } else {
       setProductsSubTab('products-list');
@@ -1050,6 +1161,12 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
               🏢 About Us
             </button>
             <button
+              className={`admin-nav-item ${activeTab === 'enquiries' ? 'active' : ''}`}
+              onClick={() => { setActiveTab('enquiries'); setMediaPickerTarget(null); }}
+            >
+              ✉️ Enquiries
+            </button>
+            <button
               className={`admin-nav-item ${activeTab === 'highlights' ? 'active' : ''}`}
               onClick={() => { setActiveTab('highlights'); setMediaPickerTarget(null); setHighlightSearch(''); }}
             >
@@ -1098,6 +1215,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
                 {activeTab === 'services' && 'Services Management'}
                 {activeTab === 'sales' && 'What We Do Page Solutions'}
                 {activeTab === 'about-us' && 'Company Profile & Statistics Counters'}
+                {activeTab === 'enquiries' && 'Enquiry Leads & Contact Submissions'}
                 {activeTab === 'highlights' && 'Recent Highlights & Achievements'}
                 {activeTab === 'footer' && 'Footer Settings — Contact, Socials & Map'}
                 {activeTab === 'settings' && (mediaPickerTarget ? 'Choose File from Media Library' : 'CMS Settings & Media Library')}
@@ -1108,6 +1226,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
                 {activeTab === 'services' && 'Create, edit, reorder and delete services. No defaults — only services you add will appear.'}
                 {activeTab === 'sales' && 'Configure and manage solution areas presented on the What We Do capabilities page.'}
                 {activeTab === 'about-us' && 'Manage Corporate profile description, profile picture, and dynamic counter targets.'}
+                {activeTab === 'enquiries' && 'Search, filter, view details, export to CSV, or delete website lead notifications.'}
                 {activeTab === 'highlights' && 'Manage carousel highlights cards, titles, descriptions, and media contents.'}
                 {activeTab === 'footer' && 'Update email, phone, LinkedIn, Instagram, Google Map embed, and legal links.'}
                 {activeTab === 'settings' && (mediaPickerTarget ? `Pick a file to set as ${mediaPickerTarget.field} for ${mediaPickerTarget.type}.` : 'Upload and delete images, specification sheets, and browse assets.')}
@@ -1505,109 +1624,595 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
 
           {/* TAB 3: ABOUT US & STATISTICS */}
           {activeTab === 'about-us' && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '40px' }}>
-              {/* About Us Paragraph */}
-              <div className="admin-card-box" style={{ background: '#1E293B', padding: '30px' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: '500', marginBottom: '20px', color: '#FFF' }}>Edit Corporate Description</h3>
-
-                <div className="admin-form-group">
-                  <label className="admin-form-label">About Us Company Profile</label>
-                  <textarea
-                    className="admin-form-control"
-                    rows="10"
-                    value={localContent.aboutUs?.description || ''}
-                    onChange={(e) => {
-                      const desc = e.target.value;
-                      setLocalContent(prev => ({
-                        ...prev,
-                        aboutUs: { ...(prev.aboutUs || {}), description: desc }
-                      }));
-                    }}
-                    onPaste={(e) => handlePasteTextarea(e, (val) => {
-                      setLocalContent(prev => ({
-                        ...prev,
-                        aboutUs: { ...(prev.aboutUs || {}), description: val }
-                      }));
-                    })}
-                    onBlur={handleFieldBlur}
-                  ></textarea>
-                </div>
-
-                <div className="admin-form-group" style={{ marginTop: '24px' }}>
-                  <label className="admin-form-label">Corporate Profile Scientist Image</label>
-                  <IntelligentMediaInput
-                    value={localContent.aboutUs?.profileImage || ''}
-                    onChange={(url) => {
-                      setLocalContent(prev => {
-                        const aboutUsCopy = { ...(prev.aboutUs || {}) };
-                        aboutUsCopy.profileImage = url;
-                        const updated = { ...prev, aboutUs: aboutUsCopy };
-                        triggerAutoSave(updated);
-                        return updated;
-                      });
-                    }}
-                    placeholder="Upload or paste direct image URL..."
-                    onBrowseLibrary={() => openMediaPicker('profile', 'aboutUs', 'profileImage')}
-                  />
-                </div>
+            <div>
+              {/* Sub-tab Selector */}
+              <div style={{ display: 'flex', gap: '10px', marginBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px' }}>
+                <button
+                  type="button"
+                  className={`admin-btn ${aboutUsSubTab === 'profile' ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
+                  style={{ padding: '8px 16px', fontSize: '13px' }}
+                  onClick={() => setAboutUsSubTab('profile')}
+                >
+                  🏢 Corporate Profile & Stats
+                </button>
+                <button
+                  type="button"
+                  className={`admin-btn ${aboutUsSubTab === 'director' ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
+                  style={{ padding: '8px 16px', fontSize: '13px' }}
+                  onClick={() => setAboutUsSubTab('director')}
+                >
+                  👤 About The Director
+                </button>
+                <button
+                  type="button"
+                  className={`admin-btn ${aboutUsSubTab === 'careers' ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
+                  style={{ padding: '8px 16px', fontSize: '13px' }}
+                  onClick={() => setAboutUsSubTab('careers')}
+                >
+                  💼 Careers Page
+                </button>
               </div>
 
-              {/* Stats Counters */}
-              <div className="admin-card-box" style={{ background: '#1E293B', padding: '30px' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: '500', marginBottom: '20px', color: '#FFF' }}>Update Statistics Counters</h3>
+              {aboutUsSubTab === 'profile' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '40px' }}>
+                  {/* About Us Paragraph */}
+                  <div className="admin-card-box" style={{ background: '#1E293B', padding: '30px' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: '500', marginBottom: '20px', color: '#FFF' }}>Edit Corporate Description</h3>
 
-                {localContent.statistics.map((stat, idx) => (
-                  <div key={idx} style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: idx < 3 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
-                    <h4 style={{ fontSize: '13px', color: '#38BDF8', marginBottom: '12px', textTransform: 'uppercase' }}>Counter {idx + 1}</h4>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px', gap: '12px', marginBottom: '8px' }}>
-                      <div>
-                        <label className="admin-form-label" style={{ fontSize: '11px' }}>Numeric Target</label>
-                        <input
-                          type="text"
-                          className="admin-form-control"
-                          value={stat.target}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            const statsCopy = [...localContent.statistics];
-                            statsCopy[idx].target = val;
-                            setLocalContent(prev => ({ ...prev, statistics: statsCopy }));
-                          }}
-                          onBlur={handleFieldBlur}
-                        />
-                      </div>
-                      <div>
-                        <label className="admin-form-label" style={{ fontSize: '11px' }}>Suffix</label>
-                        <input
-                          type="text"
-                          className="admin-form-control"
-                          value={stat.suffix}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            const statsCopy = [...localContent.statistics];
-                            statsCopy[idx].suffix = val;
-                            setLocalContent(prev => ({ ...prev, statistics: statsCopy }));
-                          }}
-                          onBlur={handleFieldBlur}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="admin-form-label" style={{ fontSize: '11px' }}>Label Text</label>
-                      <input
-                        type="text"
+                    <div className="admin-form-group">
+                      <label className="admin-form-label">About Us Company Profile</label>
+                      <textarea
                         className="admin-form-control"
-                        value={stat.label}
+                        rows="10"
+                        value={localContent.aboutUs?.description || ''}
                         onChange={(e) => {
-                          const val = e.target.value;
-                          const statsCopy = [...localContent.statistics];
-                          statsCopy[idx].label = val;
-                          setLocalContent(prev => ({ ...prev, statistics: statsCopy }));
+                          const desc = e.target.value;
+                          setLocalContent(prev => ({
+                            ...prev,
+                            aboutUs: { ...(prev.aboutUs || {}), description: desc }
+                          }));
                         }}
+                        onPaste={(e) => handlePasteTextarea(e, (val) => {
+                          setLocalContent(prev => ({
+                            ...prev,
+                            aboutUs: { ...(prev.aboutUs || {}), description: val }
+                          }));
+                        })}
                         onBlur={handleFieldBlur}
+                      ></textarea>
+                    </div>
+
+                    <div className="admin-form-group" style={{ marginTop: '24px' }}>
+                      <label className="admin-form-label">Corporate Profile Scientist Image</label>
+                      <IntelligentMediaInput
+                        value={localContent.aboutUs?.profileImage || ''}
+                        onChange={(url) => {
+                          setLocalContent(prev => {
+                            const aboutUsCopy = { ...(prev.aboutUs || {}) };
+                            aboutUsCopy.profileImage = url;
+                            const updated = { ...prev, aboutUs: aboutUsCopy };
+                            triggerAutoSave(updated);
+                            return updated;
+                          });
+                        }}
+                        placeholder="Upload or paste direct image URL..."
+                        onBrowseLibrary={() => openMediaPicker('profile', 'aboutUs', 'profileImage')}
                       />
                     </div>
                   </div>
-                ))}
+
+                  {/* Stats Counters */}
+                  <div className="admin-card-box" style={{ background: '#1E293B', padding: '30px' }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: '500', marginBottom: '20px', color: '#FFF' }}>Update Statistics Counters</h3>
+
+                    {localContent.statistics.map((stat, idx) => (
+                      <div key={idx} style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: idx < 3 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                        <h4 style={{ fontSize: '13px', color: '#38BDF8', marginBottom: '12px', textTransform: 'uppercase' }}>Counter {idx + 1}</h4>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px', gap: '12px', marginBottom: '8px' }}>
+                          <div>
+                            <label className="admin-form-label" style={{ fontSize: '11px' }}>Numeric Target</label>
+                            <input
+                              type="text"
+                              className="admin-form-control"
+                              value={stat.target}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                const statsCopy = [...localContent.statistics];
+                                statsCopy[idx].target = val;
+                                setLocalContent(prev => ({ ...prev, statistics: statsCopy }));
+                              }}
+                              onBlur={handleFieldBlur}
+                            />
+                          </div>
+                          <div>
+                            <label className="admin-form-label" style={{ fontSize: '11px' }}>Suffix</label>
+                            <input
+                              type="text"
+                              className="admin-form-control"
+                              value={stat.suffix}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                const statsCopy = [...localContent.statistics];
+                                statsCopy[idx].suffix = val;
+                                setLocalContent(prev => ({ ...prev, statistics: statsCopy }));
+                              }}
+                              onBlur={handleFieldBlur}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="admin-form-label" style={{ fontSize: '11px' }}>Label Text</label>
+                          <input
+                            type="text"
+                            className="admin-form-control"
+                            value={stat.label}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const statsCopy = [...localContent.statistics];
+                              statsCopy[idx].label = val;
+                              setLocalContent(prev => ({ ...prev, statistics: statsCopy }));
+                            }}
+                            onBlur={handleFieldBlur}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {aboutUsSubTab === 'director' && (
+                <div className="admin-card-box" style={{ background: '#1E293B', padding: '30px' }}>
+                  <h3 style={{ fontSize: '18px', fontWeight: '500', marginBottom: '20px', color: '#FFF' }}>Edit About The Director Page</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '40px' }}>
+                    <div>
+                      <div className="admin-form-group">
+                        <label className="admin-form-label">Director Name</label>
+                        <input
+                          type="text"
+                          className="admin-form-control"
+                          value={localContent.director?.name || ''}
+                          onChange={(e) => {
+                            const name = e.target.value;
+                            setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), name } }));
+                          }}
+                          onBlur={handleFieldBlur}
+                        />
+                      </div>
+                      <div className="admin-form-group">
+                        <label className="admin-form-label">Director Designation</label>
+                        <input
+                          type="text"
+                          className="admin-form-control"
+                          value={localContent.director?.designation || ''}
+                          onChange={(e) => {
+                            const designation = e.target.value;
+                            setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), designation } }));
+                          }}
+                          onBlur={handleFieldBlur}
+                        />
+                      </div>
+                      <div className="admin-form-group">
+                        <label className="admin-form-label">Director LinkedIn URL</label>
+                        <input
+                          type="url"
+                          className="admin-form-control"
+                          value={localContent.director?.linkedin || ''}
+                          onChange={(e) => {
+                            const linkedin = e.target.value;
+                            setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), linkedin } }));
+                          }}
+                          onBlur={handleFieldBlur}
+                        />
+                      </div>
+                      <div className="admin-form-group">
+                        <label className="admin-form-label">Director Contact Email</label>
+                        <input
+                          type="email"
+                          className="admin-form-control"
+                          value={localContent.director?.contact || ''}
+                          onChange={(e) => {
+                            const contact = e.target.value;
+                            setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), contact } }));
+                          }}
+                          onBlur={handleFieldBlur}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="admin-form-group">
+                        <label className="admin-form-label">Director Profile Image</label>
+                        <IntelligentMediaInput
+                          value={localContent.director?.image || ''}
+                          onChange={(url) => {
+                            setLocalContent(prev => {
+                              const dir = { ...(prev.director || {}) };
+                              dir.image = url;
+                              const updated = { ...prev, director: dir };
+                              triggerAutoSave(updated);
+                              return updated;
+                            });
+                          }}
+                          placeholder="/uploads/director.jpg..."
+                          onBrowseLibrary={() => openMediaPicker('director', 'director', 'image')}
+                          onUploadComplete={fetchMedia}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="admin-form-group" style={{ marginTop: '24px' }}>
+                    <label className="admin-form-label">Director Biography</label>
+                    <textarea
+                      className="admin-form-control"
+                      rows="6"
+                      value={localContent.director?.biography || ''}
+                      onChange={(e) => {
+                        const biography = e.target.value;
+                        setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), biography } }));
+                      }}
+                      onPaste={(e) => handlePasteTextarea(e, (val) => {
+                        setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), biography: val } }));
+                      })}
+                      onBlur={handleFieldBlur}
+                    ></textarea>
+                  </div>
+
+                  {/* Achievements */}
+                  <div className="admin-form-group" style={{ marginTop: '24px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                      <label className="admin-form-label" style={{ margin: 0 }}>Key Achievements & Recognitions</label>
+                      <button
+                        type="button"
+                        className="admin-btn admin-btn-secondary"
+                        style={{ fontSize: '11px', padding: '4px 8px' }}
+                        onClick={() => {
+                          const achievements = [...(localContent.director?.achievements || []), ''];
+                          setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), achievements } }));
+                        }}
+                      >
+                        ➕ Add Achievement
+                      </button>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {(localContent.director?.achievements || []).map((ach, idx) => (
+                        <div key={idx} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                          <input
+                            type="text"
+                            className="admin-form-control"
+                            value={ach || ''}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const achievements = [...(localContent.director?.achievements || [])];
+                              achievements[idx] = val;
+                              setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), achievements } }));
+                            }}
+                            onBlur={handleFieldBlur}
+                            style={{ fontSize: '13px' }}
+                          />
+                          <button
+                            type="button"
+                            className="admin-btn admin-btn-danger"
+                            style={{ padding: '6px 12px' }}
+                            onClick={() => {
+                              const achievements = (localContent.director?.achievements || []).filter((_, i) => i !== idx);
+                              setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), achievements } }));
+                              triggerAutoSave();
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Director Gallery */}
+                  <div className="admin-form-group" style={{ marginTop: '24px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '24px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                      <label className="admin-form-label" style={{ margin: 0 }}>Director Gallery Showcase Images</label>
+                      <button
+                        type="button"
+                        className="admin-btn admin-btn-secondary"
+                        style={{ fontSize: '11px', padding: '4px 8px' }}
+                        onClick={() => {
+                          const gallery = [...(localContent.director?.gallery || [])];
+                          gallery.push('');
+                          setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), gallery } }));
+                        }}
+                      >
+                        ➕ Add Gallery Slot
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                      {(localContent.director?.gallery || []).map((imgUrl, imgIdx) => (
+                        <div key={imgIdx} style={{ padding: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px' }}>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px' }}>
+                            <span style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 'bold' }}>Slot #{imgIdx + 1}</span>
+                            <button
+                              type="button"
+                              className="admin-btn admin-btn-danger"
+                              style={{ padding: '4px 8px', fontSize: '11px', marginLeft: 'auto' }}
+                              onClick={() => {
+                                const gallery = (localContent.director?.gallery || []).filter((_, idx) => idx !== imgIdx);
+                                setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), gallery } }));
+                                triggerAutoSave();
+                              }}
+                            >
+                              🗑 Remove
+                            </button>
+                          </div>
+                          <IntelligentMediaInput
+                            value={imgUrl || ''}
+                            onChange={(url) => {
+                              const gallery = [...(localContent.director?.gallery || [])];
+                              gallery[imgIdx] = url;
+                              setLocalContent(prev => ({ ...prev, director: { ...(prev.director || {}), gallery } }));
+                            }}
+                            placeholder="/uploads/gallery_img.jpg..."
+                            onBrowseLibrary={() => openMediaPicker('director-gallery', 'director', 'gallery', imgIdx)}
+                            onUploadComplete={fetchMedia}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {aboutUsSubTab === 'careers' && (
+                <div className="admin-card-box" style={{ background: '#1E293B', padding: '30px' }}>
+                  <h3 style={{ fontSize: '18px', fontWeight: '500', marginBottom: '20px', color: '#FFF' }}>Edit Careers Page Content</h3>
+                  <div className="admin-form-group">
+                    <label className="admin-form-label">Careers Page Title</label>
+                    <input
+                      type="text"
+                      className="admin-form-control"
+                      value={localContent.careers?.title || ''}
+                      onChange={(e) => {
+                        const title = e.target.value;
+                        setLocalContent(prev => ({ ...prev, careers: { ...(prev.careers || {}), title } }));
+                      }}
+                      onBlur={handleFieldBlur}
+                    />
+                  </div>
+                  <div className="admin-form-group">
+                    <label className="admin-form-label">Careers Description Summary</label>
+                    <textarea
+                      className="admin-form-control"
+                      rows="4"
+                      value={localContent.careers?.description || ''}
+                      onChange={(e) => {
+                        const description = e.target.value;
+                        setLocalContent(prev => ({ ...prev, careers: { ...(prev.careers || {}), description } }));
+                      }}
+                      onPaste={(e) => handlePasteTextarea(e, (val) => {
+                        setLocalContent(prev => ({ ...prev, careers: { ...(prev.careers || {}), description: val } }));
+                      })}
+                      onBlur={handleFieldBlur}
+                    ></textarea>
+                  </div>
+                  <div className="admin-form-group">
+                    <label className="admin-form-label">Recruitment & How-to-Apply Information</label>
+                    <textarea
+                      className="admin-form-control"
+                      rows="6"
+                      value={localContent.careers?.recruitmentInfo || ''}
+                      onChange={(e) => {
+                        const recruitmentInfo = e.target.value;
+                        setLocalContent(prev => ({ ...prev, careers: { ...(prev.careers || {}), recruitmentInfo } }));
+                      }}
+                      onPaste={(e) => handlePasteTextarea(e, (val) => {
+                        setLocalContent(prev => ({ ...prev, careers: { ...(prev.careers || {}), recruitmentInfo: val } }));
+                      })}
+                      onBlur={handleFieldBlur}
+                    ></textarea>
+                  </div>
+                  <div className="admin-form-group">
+                    <label className="admin-form-label">Recruitment Contact Email Address</label>
+                    <input
+                      type="email"
+                      className="admin-form-control"
+                      value={localContent.careers?.email || ''}
+                      onChange={(e) => {
+                        const email = e.target.value;
+                        setLocalContent(prev => ({ ...prev, careers: { ...(prev.careers || {}), email } }));
+                      }}
+                      onBlur={handleFieldBlur}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB: ENQUIRIES PANEL */}
+          {activeTab === 'enquiries' && (
+            <div>
+              {/* Enquiries Statistics cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1.2fr', gap: '20px', marginBottom: '24px' }}>
+                <div className="admin-card-box" style={{ background: '#1E293B', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(56, 189, 248, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
+                    ✉️
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '12px', color: '#94A3B8', display: 'block' }}>Total Enquiries Received</span>
+                    <strong style={{ fontSize: '24px', color: '#FFF' }}>{enquiries.length}</strong>
+                  </div>
+                </div>
+
+                <div className="admin-card-box" style={{ background: '#1E293B', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(52, 211, 153, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
+                    ⚡
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '12px', color: '#94A3B8', display: 'block' }}>New Leads (Last 24h)</span>
+                    <strong style={{ fontSize: '24px', color: '#34D399' }}>
+                      {newLeadsCount}
+                    </strong>
+                  </div>
+                </div>
+
+                <div className="admin-card-box" style={{ background: '#1E293B', padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <span style={{ fontSize: '12px', color: '#94A3B8', display: 'block', marginBottom: '4px' }}>Export Actions</span>
+                    <span style={{ fontSize: '11px', color: '#64748B' }}>Download enquiries records</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-primary"
+                    style={{ fontSize: '13px', padding: '10px 18px', backgroundColor: '#34D399', color: '#0F172A', fontWeight: '700' }}
+                    onClick={() => {
+                      const filtered = getFilteredEnquiries();
+                      exportToCSV(filtered);
+                      triggerNotification(`Exported ${filtered.length} enquiries to CSV`, 'success');
+                    }}
+                    disabled={enquiries.length === 0}
+                  >
+                    📥 Export Filtered ({getFilteredEnquiries().length})
+                  </button>
+                </div>
+              </div>
+
+              {/* Filters Block */}
+              <div className="admin-card-box" style={{ background: '#1E293B', padding: '20px', marginBottom: '24px' }}>
+                <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#38BDF8', marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  🔍 Search & Filter Leads
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr', gap: '16px' }}>
+                  <div>
+                    <label className="admin-form-label" style={{ fontSize: '11px' }}>Search keywords</label>
+                    <input
+                      type="text"
+                      className="admin-form-control"
+                      style={{ fontSize: '12px', padding: '8px' }}
+                      placeholder="Search name, message, email, phone..."
+                      value={productSearch}
+                      onChange={(e) => setProductSearch(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="admin-form-label" style={{ fontSize: '11px' }}>Filter by Product</label>
+                    <select
+                      className="admin-form-control"
+                      style={{ fontSize: '12px', padding: '8px' }}
+                      value={enquiryFilters.product}
+                      onChange={(e) => setEnquiryFilters(prev => ({ ...prev, product: e.target.value }))}
+                    >
+                      <option value="">All Products</option>
+                      {[...new Set(enquiries.map(e => e.productName).filter(Boolean))].map(prodName => (
+                        <option key={prodName} value={prodName}>{prodName}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="admin-form-label" style={{ fontSize: '11px' }}>Filter by Company</label>
+                    <input
+                      type="text"
+                      className="admin-form-control"
+                      style={{ fontSize: '12px', padding: '8px' }}
+                      placeholder="Company name..."
+                      value={enquiryFilters.company}
+                      onChange={(e) => setEnquiryFilters(prev => ({ ...prev, company: e.target.value }))}
+                    />
+                  </div>
+                  <div>
+                    <label className="admin-form-label" style={{ fontSize: '11px' }}>Filter by Date</label>
+                    <input
+                      type="date"
+                      className="admin-form-control"
+                      style={{ fontSize: '12px', padding: '8px' }}
+                      value={enquiryFilters.date}
+                      onChange={(e) => setEnquiryFilters(prev => ({ ...prev, date: e.target.value }))}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Enquiries Grid/Table */}
+              <div className="admin-card-box" style={{ background: '#1E293B', padding: '0px', overflow: 'hidden' }}>
+                <table className="admin-table" style={{ margin: 0 }}>
+                  <thead>
+                    <tr>
+                      <th>Customer Details</th>
+                      <th>Contact Info</th>
+                      <th>Lead Context</th>
+                      <th>Message Snippet</th>
+                      <th>Date Received</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {getFilteredEnquiries().map((enq, index) => (
+                      <tr key={enq.id || index} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                        <td>
+                          <div style={{ fontWeight: '600', color: '#FFF' }}>{enq.name}</div>
+                          <div style={{ fontSize: '11px', color: '#94A3B8' }}>{enq.company || 'Individual'}</div>
+                        </td>
+                        <td>
+                          <div style={{ fontSize: '13px' }}>✉️ {enq.email}</div>
+                          <div style={{ fontSize: '12px', color: '#94A3B8' }}>📞 {enq.phone || 'N/A'}</div>
+                        </td>
+                        <td>
+                          {enq.productName && (
+                            <span className="admin-badge admin-badge-info" style={{ backgroundColor: 'rgba(56,189,248,0.15)', color: '#38BDF8', fontSize: '11px' }}>
+                              📦 {enq.productName}
+                            </span>
+                          )}
+                          {enq.serviceName && (
+                            <span className="admin-badge admin-badge-info" style={{ backgroundColor: 'rgba(99,102,241,0.15)', color: '#818CF8', fontSize: '11px' }}>
+                              ⚙️ {enq.serviceName}
+                            </span>
+                          )}
+                          {!enq.productName && !enq.serviceName && (
+                            <span style={{ fontSize: '11px', color: '#64748B' }}>General Contact</span>
+                          )}
+                        </td>
+                        <td>
+                          <div style={{ fontSize: '13px', color: '#E2E8F0', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {enq.message}
+                          </div>
+                        </td>
+                        <td style={{ fontSize: '12px', color: '#94A3B8' }}>
+                          {new Date(enq.timestamp).toLocaleString()}
+                        </td>
+                        <td>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button
+                              type="button"
+                              className="admin-btn admin-btn-secondary"
+                              style={{ padding: '4px 10px', fontSize: '11px', color: '#34D399' }}
+                              onClick={() => setActiveEnquiry(enq)}
+                            >
+                              👁️ View
+                            </button>
+                            <button
+                              type="button"
+                              className="admin-btn admin-btn-danger"
+                              style={{ padding: '4px 10px', fontSize: '11px' }}
+                              onClick={() => {
+                                if (window.confirm('Are you sure you want to permanently delete this lead?')) {
+                                  handleDeleteEnquiry(enq.id);
+                                }
+                              }}
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {getFilteredEnquiries().length === 0 && (
+                      <tr>
+                        <td colSpan="6" style={{ textAlign: 'center', padding: '40px', color: '#64748B' }}>
+                          No enquiries found matching search criteria.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
@@ -3389,6 +3994,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
                   placeholder="/uploads/specification_sheet.pdf..."
                 />
                 <button
+                  type="button"
                   className="admin-btn admin-btn-secondary"
                   style={{ whiteSpace: 'nowrap' }}
                   onClick={() => openMediaPicker('product', editingProduct.id, 'pdf')}
@@ -3397,7 +4003,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
                 </button>
               </div>
               <div style={{ marginTop: '12px' }}>
-                <label className="admin-btn admin-btn-secondary" style={{ fontSize: '11px', padding: '6px 12px' }}>
+                <label className="admin-btn admin-btn-secondary" style={{ fontSize: '11px', padding: '6px 12px', cursor: 'pointer' }}>
                   📤 Direct Upload PDF
                   <input
                     type="file"
@@ -3407,8 +4013,60 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
                   />
                 </label>
                 {editingProduct.pdf && (
-                  <span style={{ fontSize: '12px', color: '#F87171', marginLeft: '12px' }}>📕 brochure attached</span>
+                  <span style={{ fontSize: '12px', color: '#34D399', marginLeft: '12px' }}>📕 brochure attached ({editingProduct.pdf})</span>
                 )}
+              </div>
+            </div>
+
+            <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <label className="admin-form-label" style={{ margin: 0 }}>Product Brochure Images (Up to 10)</label>
+                {(!editingProduct.brochureImages || editingProduct.brochureImages.length < 10) && (
+                  <button
+                    type="button"
+                    className="admin-btn admin-btn-secondary"
+                    style={{ fontSize: '11px', padding: '4px 8px' }}
+                    onClick={() => {
+                      const imgs = [...(editingProduct.brochureImages || [])];
+                      imgs.push('');
+                      setEditingProduct(prev => ({ ...prev, brochureImages: imgs }));
+                    }}
+                  >
+                    ➕ Add Brochure Page
+                  </button>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {(editingProduct.brochureImages || []).map((imgUrl, imgIdx) => (
+                  <div key={imgIdx} style={{ padding: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '4px' }}>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '11px', color: '#94A3B8', fontWeight: 'bold' }}>Page #{imgIdx + 1}</span>
+                      <button
+                        type="button"
+                        className="admin-btn admin-btn-danger"
+                        style={{ padding: '4px 8px', fontSize: '11px', marginLeft: 'auto' }}
+                        onClick={() => {
+                          const imgs = editingProduct.brochureImages.filter((_, idx) => idx !== imgIdx);
+                          setEditingProduct(prev => ({ ...prev, brochureImages: imgs }));
+                        }}
+                      >
+                        🗑 Remove
+                      </button>
+                    </div>
+                    <IntelligentMediaInput
+                      value={imgUrl || ''}
+                      onChange={(url) => {
+                        const imgs = [...editingProduct.brochureImages];
+                        imgs[imgIdx] = url;
+                        setEditingProduct(prev => ({ ...prev, brochureImages: imgs }));
+                      }}
+                      placeholder="/uploads/brochure_page.jpg..."
+                      onBrowseLibrary={() => openMediaPicker('product', editingProduct.id, 'brochureImages', imgIdx)}
+                      onUploadComplete={fetchMedia}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -4174,6 +4832,127 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
                 }}
               >
                 Apply Edit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Detailed Enquiry View Modal Overlay */}
+      {activeEnquiry && (
+        <div className="admin-editor-overlay" onClick={() => setActiveEnquiry(null)}>
+          <div
+            className="admin-drawer active"
+            style={{ width: '100%', maxWidth: '600px' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="admin-drawer-header">
+              <span className="admin-drawer-title">✉️ Enquiry Lead Details</span>
+              <button
+                type="button"
+                className="admin-drawer-close"
+                onClick={() => setActiveEnquiry(null)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="admin-drawer-body" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', color: '#E2E8F0' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div>
+                  <span style={{ fontSize: '11px', color: '#94A3B8', display: 'block', textTransform: 'uppercase' }}>Sender Name</span>
+                  <strong style={{ fontSize: '16px', color: '#FFF' }}>{activeEnquiry.name || 'N/A'}</strong>
+                </div>
+                <div>
+                  <span style={{ fontSize: '11px', color: '#94A3B8', display: 'block', textTransform: 'uppercase' }}>Company / Organization</span>
+                  <strong style={{ fontSize: '16px', color: '#FFF' }}>{activeEnquiry.company || 'Individual'}</strong>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div>
+                  <span style={{ fontSize: '11px', color: '#94A3B8', display: 'block', textTransform: 'uppercase' }}>Email Address</span>
+                  <div>
+                    <a href={`mailto:${activeEnquiry.email}`} style={{ fontSize: '14px', color: '#38BDF8', textDecoration: 'none', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                      ✉️ {activeEnquiry.email}
+                    </a>
+                  </div>
+                </div>
+                <div>
+                  <span style={{ fontSize: '11px', color: '#94A3B8', display: 'block', textTransform: 'uppercase' }}>Phone Number</span>
+                  <span style={{ fontSize: '14px', color: '#FFF', fontWeight: '600' }}>📞 {activeEnquiry.phone || 'N/A'}</span>
+                </div>
+              </div>
+
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <span style={{ fontSize: '11px', color: '#94A3B8', display: 'block', textTransform: 'uppercase', marginBottom: '8px' }}>Lead Context Details</span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                  {activeEnquiry.productName && (
+                    <span className="admin-badge admin-badge-info" style={{ backgroundColor: 'rgba(56,189,248,0.15)', color: '#38BDF8', fontSize: '12px', padding: '6px 12px' }}>
+                      📦 Product: {activeEnquiry.productName}
+                    </span>
+                  )}
+                  {activeEnquiry.serviceName && (
+                    <span className="admin-badge admin-badge-info" style={{ backgroundColor: 'rgba(99,102,241,0.15)', color: '#818CF8', fontSize: '12px', padding: '6px 12px' }}>
+                      ⚙️ Service: {activeEnquiry.serviceName}
+                    </span>
+                  )}
+                  {activeEnquiry.categoryName && (
+                    <span className="admin-badge admin-badge-info" style={{ backgroundColor: 'rgba(234,179,8,0.15)', color: '#FACC15', fontSize: '12px', padding: '6px 12px' }}>
+                      📁 Category: {activeEnquiry.categoryName}
+                    </span>
+                  )}
+                  {!activeEnquiry.productName && !activeEnquiry.serviceName && !activeEnquiry.categoryName && (
+                    <span style={{ fontSize: '13px', color: '#94A3B8' }}>General Website Enquiry Form</span>
+                  )}
+                </div>
+                {activeEnquiry.pageUrl && (
+                  <div style={{ marginTop: '12px', fontSize: '12px', color: '#94A3B8' }}>
+                    Origin URL: <a href={activeEnquiry.pageUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'underline' }}>{activeEnquiry.pageUrl}</a>
+                  </div>
+                )}
+              </div>
+
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)', flexGrow: 1 }}>
+                <span style={{ fontSize: '11px', color: '#94A3B8', display: 'block', textTransform: 'uppercase', marginBottom: '8px' }}>Customer Message</span>
+                <p style={{ margin: 0, fontSize: '14px', color: '#FFF', whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
+                  {activeEnquiry.message || '(No message content)'}
+                </p>
+              </div>
+
+              <div style={{ fontSize: '12px', color: '#64748B', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px' }}>
+                <span>Received: {new Date(activeEnquiry.timestamp).toLocaleString()}</span>
+                <span>ID: {activeEnquiry.id || 'N/A'}</span>
+              </div>
+            </div>
+
+            <div className="admin-drawer-footer" style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button
+                type="button"
+                className="admin-btn admin-btn-danger"
+                style={{ marginRight: 'auto' }}
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to permanently delete this lead?')) {
+                    handleDeleteEnquiry(activeEnquiry.id);
+                    setActiveEnquiry(null);
+                  }
+                }}
+              >
+                🗑️ Delete Enquiry
+              </button>
+              <a
+                href={`mailto:${activeEnquiry.email}?subject=Re: Skylife Sciences Inquiry&body=Dear ${activeEnquiry.name || ''},%0D%0A%0D%0AThank you for contacting us regarding ${activeEnquiry.productName || activeEnquiry.serviceName || 'your inquiry'}.`}
+                className="admin-btn admin-btn-primary"
+                style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', background: '#38BDF8', color: '#0F172A', fontWeight: 'bold' }}
+              >
+                ✉️ Reply via Email
+              </a>
+              <button
+                type="button"
+                className="admin-btn admin-btn-secondary"
+                onClick={() => setActiveEnquiry(null)}
+              >
+                Close
               </button>
             </div>
           </div>

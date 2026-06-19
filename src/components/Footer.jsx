@@ -1,4 +1,4 @@
-export default function Footer({ footerContent, onOpenContact, navigateTo, categories = [], services = [], serviceCategories = [], whatWeDo = null }) {
+export default function Footer({ footerContent, onOpenContact, navigateTo, services = [] }) {
   const currentYear = new Date().getFullYear();
 
   const handleFooterLinkClick = (e, path, targetId = null) => {
@@ -22,17 +22,11 @@ export default function Footer({ footerContent, onOpenContact, navigateTo, categ
 
   // ─── Services: use serviceCategories OR flat services list (never hardcoded defaults) ───
   // If no data at all, show nothing — admin must add
-  const hasServiceCategories = serviceCategories && serviceCategories.length > 0;
   const hasServices = services && services.length > 0;
 
   // Get up to 5 services for footer display
   const footerServices = hasServices
     ? services.slice(0, 5)
-    : [];
-
-  // ─── What We Do sections ──────────────────────────────────────────────────
-  const whatWeDoSections = (whatWeDo?.sections && whatWeDo.sections.length > 0)
-    ? whatWeDo.sections.slice(0, 5)
     : [];
 
   return (

@@ -3,6 +3,57 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import fs from 'fs'
 import path from 'path'
+import { MongoClient } from 'mongodb'
+import nodemailer from 'nodemailer'
+
+const mongoUri = process.env.MONGODB_URI;
+let mongoDb = null;
+let dbPromise = null;
+
+async function getMongoDb() {
+  if (mongoDb) return mongoDb;
+  if (!mongoUri) return null;
+  if (!dbPromise) {
+    dbPromise = (async () => {
+      try {
+        const client = new MongoClient(mongoUri);
+        await client.connect();
+        console.log('Successfully connected to MongoDB!');
+        mongoDb = client.db();
+        return mongoDb;
+      } catch (err) {
+        console.error('Failed to connect to MongoDB, using local file backup:', err.message);
+        dbPromise = null;
+        return null;
+      }
+    })();
+  }
+  return dbPromise;
+}
+
+const enquiriesFilePath = path.join(process.cwd(), 'enquiries.json');
+
+function readLocalEnquiries() {
+  if (!fs.existsSync(enquiriesFilePath)) {
+    return [];
+  }
+  try {
+    const data = fs.readFileSync(enquiriesFilePath, 'utf8');
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    console.error('Failed to read enquiries.json, returning empty array:', e);
+    return [];
+  }
+}
+
+function writeLocalEnquiries(enquiries) {
+  try {
+    fs.writeFileSync(enquiriesFilePath, JSON.stringify(enquiries, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Failed to write enquiries.json:', e);
+  }
+}
+
 
 // Zero-dependency multipart parser for local developer file uploads
 function parseMultipart(req) {
@@ -94,6 +145,189 @@ export default defineConfig({
           const uploadDir = path.join(process.cwd(), 'public', 'uploads');
           if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
+          }
+
+          // ─── ENQUIRIES ENDPOINTS ──────────────────────────────────────────
+          if (req.url === '/api/enquiries' && req.method === 'POST') {
+            try {
+              const body = await parseJson(req);
+              if (!body.name || !body.email || !body.message) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Name, email, and message are required' }));
+                return;
+              }
+
+              const newEnquiry = {
+                id: 'enq-' + Date.now() + '-' + Math.random().toString(36).substring(2, 11),
+                name: body.name,
+                company: body.company || '',
+                phone: body.phone || '',
+                email: body.email,
+                message: body.message,
+                productName: body.productName || '',
+                serviceName: body.serviceName || '',
+                categoryName: body.categoryName || '',
+                pageUrl: body.pageUrl || '',
+                timestamp: body.timestamp || new Date().toISOString()
+              };
+
+              // 1. Save to local file
+              const localList = readLocalEnquiries();
+              localList.unshift(newEnquiry);
+              writeLocalEnquiries(localList);
+
+              // 2. Save to MongoDB if connected
+              let savedToMongo = false;
+              try {
+                const db = await getMongoDb();
+                if (db) {
+                  await db.collection('enquiries').insertOne({ ...newEnquiry });
+                  savedToMongo = true;
+                  console.log('Successfully saved enquiry to MongoDB.');
+                }
+              } catch (mongoErr) {
+                console.error('Failed to save to MongoDB (falling back to local):', mongoErr.message);
+              }
+
+              // 3. Send email notification via nodemailer
+              const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+              const smtpPort = parseInt(process.env.SMTP_PORT || '587');
+              const smtpUser = process.env.SMTP_USER || '';
+              const smtpPass = process.env.SMTP_PASS || '';
+              const smtpSecure = process.env.SMTP_SECURE === 'true';
+
+              const emailContent = `
+                <h2>New Website Enquiry Received</h2>
+                <hr />
+                <p><strong>Customer Name:</strong> ${newEnquiry.name}</p>
+                <p><strong>Company/Organization:</strong> ${newEnquiry.company || 'N/A'}</p>
+                <p><strong>Phone Number:</strong> ${newEnquiry.phone || 'N/A'}</p>
+                <p><strong>Email Address:</strong> ${newEnquiry.email}</p>
+                <p><strong>Inquiry Details:</strong></p>
+                <blockquote style="background: #f4f4f4; padding: 15px; border-left: 5px solid #136B36;">
+                  ${newEnquiry.message.replace(/\n/g, '<br />')}
+                </blockquote>
+                <p><strong>Contextual Information:</strong></p>
+                <ul>
+                  <li>Product Name: ${newEnquiry.productName || 'N/A'}</li>
+                  <li>Service Name: ${newEnquiry.serviceName || 'N/A'}</li>
+                  <li>Category Name: ${newEnquiry.categoryName || 'N/A'}</li>
+                </ul>
+                <p><strong>Source Page URL:</strong> <a href="${newEnquiry.pageUrl}">${newEnquiry.pageUrl}</a></p>
+                <p><strong>Timestamp:</strong> ${newEnquiry.timestamp}</p>
+              `;
+
+              let emailSent = false;
+              if (smtpUser && smtpPass) {
+                try {
+                  const transporter = nodemailer.createTransport({
+                    host: smtpHost,
+                    port: smtpPort,
+                    secure: smtpSecure,
+                    auth: { user: smtpUser, pass: smtpPass }
+                  });
+
+                  await transporter.sendMail({
+                    from: `"Sky Life Sciences" <${smtpUser}>`,
+                    to: 'shylender@skylifesciencessolutions.com',
+                    subject: `[New Enquiry] - ${newEnquiry.name} from ${newEnquiry.company || 'Individual'}`,
+                    html: emailContent
+                  });
+                  emailSent = true;
+                  console.log('Notification email sent successfully to shylender@skylifesciencessolutions.com.');
+                } catch (emailErr) {
+                  console.error('Failed to send email notification:', emailErr.message);
+                }
+              } else {
+                console.log('Email logging (No SMTP config):');
+                console.log(emailContent.replace(/<[^>]+>/g, '\n').trim());
+              }
+
+              res.writeHead(201, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ 
+                success: true, 
+                enquiry: newEnquiry,
+                savedToMongo,
+                emailSent
+              }));
+            } catch (err) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: err.message }));
+            }
+            return;
+          }
+
+          if (req.url.startsWith('/api/enquiries') && req.method === 'GET') {
+            if (!checkAuth(req.headers)) {
+              res.writeHead(403, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Unauthorized' }));
+              return;
+            }
+            try {
+              let enquiries = [];
+              let loadedFromMongo = false;
+              try {
+                const db = await getMongoDb();
+                if (db) {
+                  enquiries = await db.collection('enquiries').find({}).sort({ timestamp: -1 }).toArray();
+                  loadedFromMongo = true;
+                }
+              } catch (mongoErr) {
+                console.error('Failed to read enquiries from MongoDB (falling back to local file):', mongoErr.message);
+              }
+
+              if (!loadedFromMongo) {
+                enquiries = readLocalEnquiries();
+              }
+
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify(enquiries));
+            } catch (err) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: err.message }));
+            }
+            return;
+          }
+
+          if (req.url.startsWith('/api/enquiries') && req.method === 'DELETE') {
+            if (!checkAuth(req.headers)) {
+              res.writeHead(403, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Unauthorized' }));
+              return;
+            }
+            try {
+              const urlParsed = new URL(req.url, `http://${req.headers.host}`);
+              const id = urlParsed.searchParams.get('id');
+              if (!id) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Enquiry ID is required' }));
+                return;
+              }
+
+              // 1. Delete from local file
+              const localList = readLocalEnquiries();
+              const filteredList = localList.filter(item => item.id !== id);
+              writeLocalEnquiries(filteredList);
+
+              // 2. Delete from MongoDB if connected
+              let deletedFromMongo = false;
+              try {
+                const db = await getMongoDb();
+                if (db) {
+                  const result = await db.collection('enquiries').deleteOne({ id: id });
+                  deletedFromMongo = result.deletedCount > 0;
+                }
+              } catch (mongoErr) {
+                console.error('Failed to delete from MongoDB:', mongoErr.message);
+              }
+
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: true, deletedFromMongo }));
+            } catch (err) {
+              res.writeHead(500, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: err.message }));
+            }
+            return;
           }
 
           if (req.url === '/api/login' && req.method === 'POST') {
@@ -296,7 +530,7 @@ export default defineConfig({
                     jsonLd = item;
                     break;
                   }
-                } catch (_) { /* ignore parse errors */ }
+                } catch { /* ignore parse errors */ }
               }
 
               // ── 2. OpenGraph / Twitter meta ───────────────────────────────

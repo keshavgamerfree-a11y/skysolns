@@ -78,6 +78,30 @@
   "aboutUs": {
     "description": "Engineering the Future of Smart Manufacturing\n\nSky Lifesciences Solutions is a technology-driven organization focused on bringing next-generation manufacturing solutions to the pharmaceutical, chemical, agrochemical, and specialty chemical sectors.\n\nWe bridge the gap between traditional manufacturing and the factories of the future by integrating:\nContinuous Manufacturing \n\nFlow Chemistry,\nProcess Intensification,  \nComplete Lab Setup,  \nDigital Manufacturing,  \nGreen Chemistry,  \nIndustry 4.0 Solutions & More  \n\nThrough strategic partnerships with global technology leaders and our deep industry expertise, we help organizations improve productivity, quality, safety, and sustainability."
   },
+  "director": {
+    "name": "Dr. Shylender",
+    "designation": "Director & Founder",
+    "biography": "Dr. Shylender is a visionary leader with over 20 years of experience in Life Sciences, pharmaceuticals, and manufacturing technologies. He is committed to bringing sustainable and innovative process intensification to research and development. Under his guidance, Sky Life Sciences Solutions has partnered with international developers to transform manufacturing setups across the chemical and pharmaceutical fields.",
+    "image": "/logo.jpg",
+    "gallery": [
+      "/uploads/lab_feasibility.png",
+      "/uploads/process_development.png"
+    ],
+    "achievements": [
+      "Pioneered flow chemistry systems integration in India",
+      "Over 20+ years of technical advisory in chemical process automation",
+      "Keynote speaker at Agrochemicals R&D Summit and ChemExpo",
+      "Successfully established 100+ laboratory setups globally"
+    ],
+    "linkedin": "https://www.linkedin.com/company/skylifesciencessolutions",
+    "contact": "shylender@skylifesciencessolutions.com"
+  },
+  "careers": {
+    "title": "Careers at Sky Life Sciences Solutions",
+    "description": "We are always looking for passionate scientists, engineers, and innovators to join our team in Hyderabad and help shape the future of smart continuous manufacturing.",
+    "recruitmentInfo": "Interested in joining Sky Life Sciences Solutions?\n\nSend your resume to: careers@skylifesciencessolutions.com\n\nOur HR team will review your qualifications and contact you once an opportunity opens up.",
+    "email": "careers@skylifesciencessolutions.com"
+  },
   "statistics": [
     {
       "target": "2000",
