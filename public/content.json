@@ -858,7 +858,7 @@
       "category": "complete-catalog",
       "desc": "Sky Life Sciences Solutions-offers advanced technologies for continuous flow chemistry, pharmaceutical process development, and industrial-scale manufacturing. Our portfolio includes Corning flow reactors, process development systems, dosing lines, Zaiput liquid-liquid and gas-liquid separators, extraction platforms, heterogeneous catalysis reactors, crystallization systems, partition chromatography solutions, back pressure regulators, pumps, analytical tools, and biopharmaceutical processing equipment. These solutions help pharmaceutical, chemical, and life sciences organizations improve process efficiency, scalability, safety, product quality, and manufacturing performance from laboratory research through commercial production.\n\n\nYou can view/download our complete catalog for 2026 From here!",
       "img": "",
-      "pdf": "file:///C:/Users/B%20KESHAV/.gemini/antigravity-ide/scratch/skylife-sciences/public/sky%20solutions%20final%20catalogue.pdf",
+      "pdf": "/uploads/sky_solutions_final_catalogue_1781814064404.pdf",
       "slug": "sky-life-sciences-solutions-complete-product-catalog",
       "technicalOverview": ""
     },
@@ -871,7 +871,8 @@
       "pdf": "",
       "slug": "dosing-lines-product",
       "brochureImages": [
-        "/uploads/image_1781886817052.png"
+        "/uploads/image_1781886817052.png",
+        ""
       ]
     }
   ],
