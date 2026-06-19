@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 // Helper to render text with clickable links
 function renderTextWithLinks(text) {
@@ -130,133 +129,83 @@ function renderFormattedText(text) {
   return elements;
 }
 
-// Helper to render media element dynamically
-function renderMediaPlaceholder(media, name) {
-  if (!media) return null;
-  if (media.type === 'image') {
-    return (
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        style={{
-          border: '1px solid var(--border-color)',
-          borderRadius: '8px',
-          backgroundColor: '#FFF',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          height: '350px',
-          width: '100%',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
-          padding: '16px'
-        }}
-      >
-        <img src={media.url} alt={name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-      </motion.div>
-    );
-  } else if (media.type === 'video') {
-    const isYoutube = media.url.includes('youtube.com') || media.url.includes('youtu.be');
-    return (
-      <motion.div 
-        initial={{ opacity: 0, y: 15 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        style={{
-          border: '1px solid var(--border-color)',
-          borderRadius: '8px',
-          overflow: 'hidden',
-          aspectRatio: '16/9',
-          backgroundColor: '#000',
-          width: '100%',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
-        }}
-      >
-        {isYoutube ? (
-          <iframe
-            width="100%"
-            height="100%"
-            src={media.url.replace('watch?v=', 'embed/')}
-            title={`Video demonstration`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        ) : (
-          <video 
-            src={media.url} 
-            controls 
-            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-          />
-        )}
-      </motion.div>
-    );
-  }
-  return null;
-}
-
-// Render a section with alternating columns
-function AlternatingSection({ title, children, media, name, isLeftMedia, isAltBg }) {
-  const contentCol = (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
-    >
-      <h3 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', color: 'var(--text-primary)' }}>
-        {title}
-      </h3>
-      <div>{children}</div>
-    </motion.div>
-  );
-
-  const mediaCol = media ? (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-      {renderMediaPlaceholder(media, `${name} ${title}`)}
-    </div>
-  ) : null;
-
-  return (
-    <section className="section" style={{ backgroundColor: isAltBg ? 'var(--bg-primary)' : 'var(--bg-white)', borderBottom: '1px solid var(--border-color)', padding: '60px 0' }}>
-      <div className="container">
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: media ? '1.1fr 0.9fr' : '1fr',
-          gap: '60px',
-          alignItems: 'center'
-        }}>
-          {isLeftMedia && media ? (
-            <>
-              {mediaCol}
-              {contentCol}
-            </>
-          ) : (
-            <>
-              {contentCol}
-              {mediaCol}
-            </>
-          )}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function ProductDetailView({ product, category, onOpenContact, onBackToCategory, onBackToCategories }) {
   const [showPdfModal, setShowPdfModal] = useState(false);
-  const [activeBrochureImg, setActiveBrochureImg] = useState(null);
-  const [brochureZoom, setBrochureZoom] = useState(1);
+  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [lightboxZoom, setLightboxZoom] = useState(1);
+  const [activeTab, setActiveTab] = useState('overview');
+
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    const diff = touchStartX - touchEndX;
+    if (diff > 50) {
+      setLightboxIndex(prev => (prev + 1) % galleryMedia.length);
+      setLightboxZoom(1);
+    } else if (diff < -50) {
+      setLightboxIndex(prev => (prev - 1 + galleryMedia.length) % galleryMedia.length);
+      setLightboxZoom(1);
+    }
+  };
+
+  // Compile unified media list for showcase and slideshow Lightbox
+  const galleryMedia = [];
+  
+  if (product) {
+    // 1. Add product images
+    const productImages = product.images || (product.img ? [product.img] : []);
+    productImages.forEach(url => {
+      if (url) galleryMedia.push({ type: 'image', url, label: 'Product View' });
+    });
+
+    // 2. Add product videos
+    const videos = product.videos || [];
+    videos.forEach(url => {
+      if (url) galleryMedia.push({ type: 'video', url, label: 'Video Demo' });
+    });
+
+    // 3. Add brochure images
+    const brochureImages = product.brochureImages || [];
+    brochureImages.forEach((url, index) => {
+      if (url) galleryMedia.push({ type: 'image', url, label: `Brochure P.${index + 1}` });
+    });
+  }
+
+  // Keyboard navigation listener for the slideshow Lightbox
+  useEffect(() => {
+    if (!isLightboxOpen || !product) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        setLightboxIndex(prev => (prev - 1 + galleryMedia.length) % galleryMedia.length);
+        setLightboxZoom(1);
+      } else if (e.key === 'ArrowRight') {
+        setLightboxIndex(prev => (prev + 1) % galleryMedia.length);
+        setLightboxZoom(1);
+      } else if (e.key === 'Escape') {
+        setIsLightboxOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isLightboxOpen, galleryMedia.length, product]);
 
   if (!product) return null;
 
-  // Compile media lists
-  const images = product.images || (product.img ? [product.img] : []);
-  const videos = product.videos || [];
+  const brochureImages = product.brochureImages || [];
+  const currentMedia = galleryMedia[activeMediaIndex] || null;
   const specs = product.specifications || {};
   const hasSpecs = Object.keys(specs).length > 0;
   const features = product.features || [];
@@ -272,47 +221,10 @@ export default function ProductDetailView({ product, category, onOpenContact, on
     }
   };
 
-  // Compile media pool
-  let heroMedia = null;
-  const mediaPool = [];
-
-  if (images.length > 0) {
-    heroMedia = { type: 'image', url: images[0] };
-    for (let i = 1; i < images.length; i++) {
-      mediaPool.push({ type: 'image', url: images[i] });
-    }
-    for (let i = 0; i < videos.length; i++) {
-      mediaPool.push({ type: 'video', url: videos[i] });
-    }
-  } else if (videos.length > 0) {
-    heroMedia = { type: 'video', url: videos[0] };
-    for (let i = 1; i < videos.length; i++) {
-      mediaPool.push({ type: 'video', url: videos[i] });
-    }
-  }
-
-  // Helper to extract next media from pool
-  const getNextMedia = (preferredType) => {
-    if (mediaPool.length === 0) return null;
-    if (preferredType) {
-      const idx = mediaPool.findIndex(m => m.type === preferredType);
-      if (idx !== -1) {
-        return mediaPool.splice(idx, 1)[0];
-      }
-    }
-    return mediaPool.shift();
-  };
-
-  // Pull media items for each potential section
-  const featuresMedia = getNextMedia('image');
-  const overviewMedia = getNextMedia('image');
-  const appsMedia = getNextMedia('image');
-  const specsMedia = getNextMedia('image');
-
   return (
-    <div style={{ backgroundColor: 'var(--bg-primary)', paddingTop: 'var(--whitespace-xl)', paddingBottom: 'var(--whitespace-xxl)' }}>
+    <div style={{ backgroundColor: 'var(--bg-primary)', paddingBottom: '80px' }}>
       {/* Navigation breadcrumbs */}
-      <section className="section" style={{ backgroundColor: 'var(--bg-white)', borderBottom: '1px solid var(--border-color)', padding: 'var(--whitespace-sm) 0' }}>
+      <section className="section" style={{ backgroundColor: 'var(--bg-white)', borderBottom: '1px solid var(--border-color)', padding: 'var(--whitespace-sm) 0', marginBottom: '24px' }}>
         <div className="container">
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px', color: 'var(--text-secondary)' }}>
             <button onClick={onBackToCategories} style={{ color: 'inherit', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Categories</button>
@@ -328,22 +240,78 @@ export default function ProductDetailView({ product, category, onOpenContact, on
         </div>
       </section>
 
-      {/* Hero Showcase Section: Cover Image + Desc & Actions */}
-      <section className="section" style={{ backgroundColor: 'var(--bg-white)', padding: '60px 0', borderBottom: '1px solid var(--border-color)' }}>
+      {/* Primary Top Panel Showcase Grid */}
+      <section style={{ backgroundColor: 'var(--bg-white)', padding: '30px 0', borderBottom: '1px solid var(--border-color)' }}>
         <div className="container">
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: heroMedia ? '1.1fr 0.9fr' : '1fr', 
-            gap: '60px', 
-            alignItems: 'center' 
-          }}>
-            {/* Left Column: text fields & lists */}
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.5 }} 
-              style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
-            >
+          <div className="product-grid-container">
+            {/* Left Column: Image Showcase & Gallery Gallery */}
+            <div className="product-gallery-showcase">
+              {currentMedia ? (
+                <div 
+                  className="product-gallery-main"
+                  onClick={() => {
+                    if (currentMedia.type === 'image') {
+                      setLightboxIndex(activeMediaIndex);
+                      setIsLightboxOpen(true);
+                      setLightboxZoom(1);
+                    }
+                  }}
+                >
+                  {currentMedia.type === 'image' ? (
+                    <img src={currentMedia.url} alt={product.name} />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', backgroundColor: '#000' }}>
+                      {currentMedia.url.includes('youtube.com') || currentMedia.url.includes('youtu.be') ? (
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src={currentMedia.url.replace('watch?v=', 'embed/')}
+                          title="Video Demo"
+                          frameBorder="0"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <video src={currentMedia.url} controls style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      )}
+                    </div>
+                  )}
+                  {currentMedia.type === 'image' && (
+                    <div style={{ position: 'absolute', bottom: '12px', right: '12px', background: 'rgba(0,0,0,0.5)', color: '#FFF', fontSize: '11px', padding: '4px 8px', borderRadius: '2px', pointerEvents: 'none' }}>
+                      🔍 Click to zoom
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="product-gallery-main" style={{ cursor: 'default' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>No media available</span>
+                </div>
+              )}
+
+              {/* Thumbnails row below */}
+              {galleryMedia.length > 1 && (
+                <div className="product-gallery-thumbnails">
+                  {galleryMedia.map((media, idx) => (
+                    <div
+                      key={idx}
+                      className={`product-gallery-thumb ${idx === activeMediaIndex ? 'active' : ''}`}
+                      onClick={() => setActiveMediaIndex(idx)}
+                    >
+                      {media.type === 'image' ? (
+                        <img src={media.url} alt={`Thumb ${idx + 1}`} />
+                      ) : (
+                        <div style={{ width: '100%', height: '100%', backgroundColor: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFF"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </div>
+                      )}
+                      <span className="product-gallery-thumb-badge">{media.type === 'video' ? 'Video' : media.label.split(' ')[0]}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Right Column: Identity, Description, and Actions */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div>
                 {category && (
                   <span 
@@ -353,74 +321,103 @@ export default function ProductDetailView({ product, category, onOpenContact, on
                       color: 'var(--accent-blue)',
                       fontSize: '11px',
                       padding: '6px 12px',
-                      borderRadius: '0px',
+                      borderRadius: '4px',
                       fontWeight: '600',
-                      letterSpacing: '0.05em'
+                      letterSpacing: '0.05em',
+                      display: 'inline-block'
                     }}
                   >
                     {category.title}
                   </span>
                 )}
-                <h1 style={{ fontSize: '42px', fontWeight: '600', letterSpacing: '-0.02em', color: 'var(--text-primary)', marginTop: '12px', marginBottom: '16px', lineHeight: '1.2' }}>
+                <h1 style={{ fontSize: '38px', fontWeight: '600', letterSpacing: '-0.02em', color: 'var(--text-primary)', marginTop: '8px', marginBottom: '8px', lineHeight: '1.2' }}>
                   {product.name}
                 </h1>
-                
-                {/* Product Long Description (Pasted Text formatted) */}
-                <div style={{ marginTop: '12px' }}>
-                  {renderFormattedText(product.desc)}
-                </div>
               </div>
 
-              {/* Action row with Contact Mail and brochure buttons */}
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '16px', borderTop: '1px solid var(--border-color)', paddingTop: '24px' }}>
+              {/* Primary call-to-actions */}
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '24px 0' }}>
                 <button 
                   className="btn btn-primary" 
                   onClick={handleContactClick}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', borderRadius: '4px' }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                     <polyline points="22,6 12,13 2,6"></polyline>
                   </svg>
-                  Contact Us
+                  Request Information / Quote
                 </button>
 
-                {product.pdf && (
+                {product.pdf ? (
                   <>
                     <button 
                       onClick={() => setShowPdfModal(true)} 
                       className="btn btn-primary"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--accent-purple)', color: '#FFF', cursor: 'pointer', border: 'none' }}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--accent-blue)', color: '#FFF', cursor: 'pointer', border: 'none', borderRadius: '4px' }}
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
-                      View Brochure
+                      View Brochure PDF
                     </button>
                     <a 
                       href={product.pdf} 
                       download
                       className="btn btn-secondary"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', borderRadius: '4px' }}
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
                       </svg>
-                      Download Brochure
+                      Download PDF
                     </a>
                   </>
+                ) : brochureImages.length > 0 ? (
+                  <button 
+                    onClick={() => {
+                      const firstBrochureIdx = galleryMedia.findIndex(m => m.label.startsWith('Brochure'));
+                      if (firstBrochureIdx !== -1) {
+                        setActiveMediaIndex(firstBrochureIdx);
+                        setLightboxIndex(firstBrochureIdx);
+                        setIsLightboxOpen(true);
+                        setLightboxZoom(1);
+                      }
+                    }} 
+                    className="btn btn-primary"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--accent-purple)', color: '#FFF', cursor: 'pointer', border: 'none', borderRadius: '4px' }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    View Brochure Sheets
+                  </button>
+                ) : null}
+              </div>
+
+              {/* Overview snippet description */}
+              <div>
+                <h3 style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--text-primary)', letterSpacing: '0.08em', marginBottom: '10px', fontWeight: '600' }}>Product Overview</h3>
+                <p style={{ fontSize: '15.5px', color: 'var(--text-secondary)', lineHeight: '1.65' }}>
+                  {product.desc ? (product.desc.split('\n')[0] || '') : ''}
+                </p>
+                {!product.pdf && brochureImages.length > 0 && (
+                  <p style={{ fontSize: '13px', color: 'var(--accent-purple)', fontWeight: '600', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    📖 Image-based brochure catalog sheets are accessible directly in the photo showcase.
+                  </p>
                 )}
               </div>
 
-              {/* Assistance info helper row (always visible) */}
-              <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Need assistance?</span>
+              {/* Direct support information block */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', background: '#F8F9FA', padding: '16px 20px', borderRadius: '4px', border: '1px dashed var(--border-color)', marginTop: 'auto' }}>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '500' }}>For technical or sales assistance:</span>
                 <a 
                   href="mailto:shylender@skylifesciencessolutions.com" 
-                  style={{ fontSize: '14.5px', color: 'var(--accent-blue)', textDecoration: 'none', fontWeight: '500', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                  style={{ fontSize: '14.5px', color: 'var(--accent-blue)', textDecoration: 'none', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
@@ -429,126 +426,128 @@ export default function ProductDetailView({ product, category, onOpenContact, on
                   shylender@skylifesciencessolutions.com
                 </a>
               </div>
-            </motion.div>
+            </div>
+          </div>
 
-            {/* Right Column: Hero Cover Media */}
-            {heroMedia && (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                style={{ width: '100%' }}
+          {/* Compact Technical Tabs Switcher */}
+          <div className="product-tabs-container">
+            <div className="product-tabs-nav">
+              <button 
+                type="button"
+                className={`product-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
+                onClick={() => setActiveTab('overview')}
               >
-                {renderMediaPlaceholder(heroMedia, product.name)}
-              </motion.div>
-            )}
+                Detailed Description
+              </button>
+              {features.length > 0 && (
+                <button 
+                  type="button"
+                  className={`product-tab-btn ${activeTab === 'features' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('features')}
+                >
+                  Key Features
+                </button>
+              )}
+              {applications.length > 0 && (
+                <button 
+                  type="button"
+                  className={`product-tab-btn ${activeTab === 'applications' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('applications')}
+                >
+                  Typical Applications
+                </button>
+              )}
+              {hasSpecs && (
+                <button 
+                  type="button"
+                  className={`product-tab-btn ${activeTab === 'specs' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('specs')}
+                >
+                  Specifications Table
+                </button>
+              )}
+            </div>
+
+            <div className="product-tab-content">
+              {activeTab === 'overview' && (
+                <div>
+                  <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: 'var(--text-primary)' }}>Overview & Details</h3>
+                  {renderFormattedText(product.desc)}
+                  {product.technicalOverview && (
+                    <div style={{ marginTop: '30px', borderTop: '1px solid var(--border-color)', paddingTop: '24px' }}>
+                      <h4 style={{ fontSize: '14px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-primary)', marginBottom: '12px' }}>Technical Overview</h4>
+                      {renderFormattedText(product.technicalOverview)}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'features' && features.length > 0 && (
+                <div>
+                  <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: 'var(--text-primary)' }}>Key Features</h3>
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {features.map((feat, idx) => (
+                      <li key={idx} style={{ fontSize: '15px', color: 'var(--text-secondary)', display: 'flex', gap: '10px', alignItems: 'flex-start', lineHeight: '1.5' }}>
+                        <span style={{ color: 'var(--accent-purple)', fontWeight: 'bold', fontSize: '18px', lineHeight: '1', marginTop: '-2px' }}>•</span>
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {activeTab === 'applications' && applications.length > 0 && (
+                <div>
+                  <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: 'var(--text-primary)' }}>Typical Applications</h3>
+                  <ul style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {applications.map((app, idx) => (
+                      <li key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                        <span 
+                          style={{ 
+                            width: '24px', 
+                            height: '24px', 
+                            borderRadius: '50%', 
+                            backgroundColor: 'var(--accent-purple-light)', 
+                            color: 'var(--accent-purple)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '11px',
+                            fontWeight: 'bold',
+                            flexShrink: 0,
+                            marginTop: '2px'
+                          }}
+                        >
+                          {idx + 1}
+                        </span>
+                        <span style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                          {app}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {activeTab === 'specs' && hasSpecs && (
+                <div>
+                  <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px', color: 'var(--text-primary)' }}>Technical Specifications</h3>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <tbody>
+                      {Object.entries(specs).map(([key, val], sIdx) => (
+                        <tr key={sIdx} style={{ borderBottom: '1px solid #ECECEC' }}>
+                          <td style={{ padding: '14px 0', fontSize: '14.5px', fontWeight: '600', color: 'var(--text-primary)', width: '35%' }}>{key}</td>
+                          <td style={{ padding: '14px 0', fontSize: '14.5px', color: 'var(--text-secondary)' }}>{val}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
-
-      {/* Alternating content sections */}
-      {features.length > 0 && (
-        <AlternatingSection 
-          title="Key Features"
-          media={featuresMedia}
-          name={product.name}
-          isLeftMedia={false}
-          isAltBg={true}
-        >
-          <ul style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {features.map((feat, idx) => (
-              <li key={idx} style={{ fontSize: '14.5px', color: 'var(--text-secondary)', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                <span style={{ color: 'var(--accent-purple)', fontWeight: 'bold', fontSize: '16px', lineHeight: '1', marginTop: '-1px' }}>•</span>
-                <span>{feat}</span>
-              </li>
-            ))}
-          </ul>
-        </AlternatingSection>
-      )}
-
-      {product.technicalOverview && (
-        <AlternatingSection
-          title="Technical Overview"
-          media={overviewMedia}
-          name={product.name}
-          isLeftMedia={true}
-          isAltBg={false}
-        >
-          <div>
-            {renderFormattedText(product.technicalOverview)}
-          </div>
-        </AlternatingSection>
-      )}
-
-      {applications.length > 0 && (
-        <AlternatingSection
-          title="Typical Applications"
-          media={appsMedia}
-          name={product.name}
-          isLeftMedia={false}
-          isAltBg={true}
-        >
-          <ul style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {applications.map((app, idx) => (
-              <li key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                <span 
-                  style={{ 
-                    width: '24px', 
-                    height: '24px', 
-                    borderRadius: '50%', 
-                    backgroundColor: 'var(--accent-purple-light)', 
-                    color: 'var(--accent-purple)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '11px',
-                    fontWeight: 'bold',
-                    flexShrink: 0,
-                    marginTop: '2px'
-                  }}
-                >
-                  {idx + 1}
-                </span>
-                <span style={{ fontSize: '14.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  {app}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </AlternatingSection>
-      )}
-
-      {hasSpecs && (
-        <AlternatingSection
-          title="Technical Specifications"
-          media={specsMedia}
-          name={product.name}
-          isLeftMedia={true}
-          isAltBg={false}
-        >
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <tbody>
-              {Object.entries(specs).map(([key, val], sIdx) => (
-                <tr key={sIdx} style={{ borderBottom: '1px solid #ECECEC' }}>
-                  <td style={{ padding: '12px 0', fontSize: '14px', fontWeight: '600', color: 'var(--text-primary)', width: '40%' }}>{key}</td>
-                  <td style={{ padding: '12px 0', fontSize: '14px', color: 'var(--text-secondary)' }}>{val}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </AlternatingSection>
-      )}
-
-      {/* Extra pool media rendered as inline visual break banners (never as a bottom grid gallery) */}
-      {mediaPool.map((med, rIdx) => (
-        <section key={`extra-${rIdx}`} className="section" style={{ backgroundColor: rIdx % 2 === 0 ? 'var(--bg-primary)' : 'var(--bg-white)', borderBottom: '1px solid var(--border-color)', padding: '60px 0' }}>
-          <div className="container" style={{ display: 'flex', justifyContent: 'center' }}>
-            <div style={{ maxWidth: '800px', width: '100%' }}>
-              {renderMediaPlaceholder(med, `${product.name} demo ${rIdx}`)}
-            </div>
-          </div>
-        </section>
-      ))}
 
       {/* Embedded PDF Viewer Modal */}
       {showPdfModal && (
@@ -575,7 +574,7 @@ export default function ProductDetailView({ product, category, onOpenContact, on
             display: 'flex',
             flexDirection: 'column',
             boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
-            borderRadius: '8px',
+            borderRadius: '4px',
             overflow: 'hidden'
           }}>
             {/* Modal Header */}
@@ -587,7 +586,7 @@ export default function ProductDetailView({ product, category, onOpenContact, on
               alignItems: 'center',
               backgroundColor: 'var(--bg-primary)'
             }}>
-              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '500', color: 'var(--text-primary)' }}>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: 'var(--text-primary)' }}>
                 Brochure Viewer: {product.name}
               </h3>
               <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
@@ -629,108 +628,129 @@ export default function ProductDetailView({ product, category, onOpenContact, on
         </div>
       )}
 
-      {/* Brochure Images Section */}
-      {product.brochureImages && product.brochureImages.length > 0 && (
-        <section className="section" style={{ backgroundColor: 'var(--bg-primary)', padding: '60px 0', borderBottom: '1px solid var(--border-color)' }}>
-          <div className="container">
-            <h3 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '24px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', color: 'var(--text-primary)' }}>
-              Product Brochure Pages
-            </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '20px' }}>
-              {product.brochureImages.map((url, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    backgroundColor: '#fff',
-                    border: '1px solid var(--border-color)',
-                    padding: '8px',
-                    borderRadius: '4px',
-                    cursor: 'zoom-in',
-                    boxShadow: 'var(--shadow-sm)'
-                  }}
-                  onClick={() => {
-                    setActiveBrochureImg(url);
-                    setBrochureZoom(1);
-                  }}
-                >
-                  <img src={url} alt={`Brochure Page ${idx + 1}`} style={{ width: '100%', height: '260px', objectFit: 'cover' }} />
-                  <div style={{ textAlign: 'center', fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: '600' }}>
-                    Page {idx + 1}
-                  </div>
-                </div>
-              ))}
+      {/* Premium Lightbox Overlay */}
+      {isLightboxOpen && (
+        <div 
+          className="premium-lightbox" 
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          {/* Header toolbar */}
+          <div className="lightbox-header" onClick={(e) => e.stopPropagation()}>
+            <h4 className="lightbox-title">
+              {product.name} - {galleryMedia[lightboxIndex]?.label || ''}
+            </h4>
+            <div className="lightbox-controls">
+              <button 
+                type="button"
+                className="lightbox-btn"
+                onClick={() => setLightboxZoom(prev => Math.max(prev - 0.25, 0.75))}
+              >
+                ➖ Zoom Out
+              </button>
+              <button 
+                type="button"
+                className="lightbox-btn"
+                onClick={() => setLightboxZoom(1)}
+              >
+                1:1 Reset
+              </button>
+              <button 
+                type="button"
+                className="lightbox-btn"
+                onClick={() => setLightboxZoom(prev => Math.min(prev + 0.25, 2.5))}
+              >
+                ➕ Zoom In
+              </button>
+              <button 
+                type="button"
+                className="lightbox-btn lightbox-close"
+                onClick={() => setIsLightboxOpen(false)}
+              >
+                ✕ Close
+              </button>
             </div>
           </div>
-        </section>
-      )}
 
-      {/* Lightbox for Brochure Images */}
-      {activeBrochureImg && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          backgroundColor: 'rgba(11, 15, 25, 0.9)',
-          backdropFilter: 'blur(8px)',
-          zIndex: 99999,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px'
-        }} onClick={() => setActiveBrochureImg(null)}>
-          {/* Toolbar */}
-          <div style={{
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            display: 'flex',
-            gap: '12px',
-            zIndex: 10
-          }} onClick={(e) => e.stopPropagation()}>
-            <button 
-              onClick={(e) => { e.stopPropagation(); setBrochureZoom(prev => Math.max(prev - 0.25, 0.75)); }} 
-              style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none', padding: '10px 14px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-            >
-              ➖
-            </button>
-            <button 
-              onClick={(e) => { e.stopPropagation(); setBrochureZoom(1); }} 
-              style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none', padding: '10px 14px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-            >
-              1:1
-            </button>
-            <button 
-              onClick={(e) => { e.stopPropagation(); setBrochureZoom(prev => Math.min(prev + 0.25, 2.5)); }} 
-              style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none', padding: '10px 14px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-            >
-              ➕
-            </button>
-            <button 
-              onClick={() => setActiveBrochureImg(null)} 
-              style={{ backgroundColor: 'var(--accent-purple)', color: '#fff', border: 'none', padding: '10px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-            >
-              ✕ Close
-            </button>
+          {/* Lightbox center body */}
+          <div 
+            className="lightbox-body" 
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Left navigation arrow */}
+            {galleryMedia.length > 1 && (
+              <button 
+                type="button"
+                className="lightbox-arrow lightbox-arrow-left"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxIndex(prev => (prev - 1 + galleryMedia.length) % galleryMedia.length);
+                  setLightboxZoom(1);
+                }}
+              >
+                ‹
+              </button>
+            )}
+
+            {/* Main media inside Lightbox */}
+            {galleryMedia[lightboxIndex] && (
+              galleryMedia[lightboxIndex].type === 'image' ? (
+                <img
+                  src={galleryMedia[lightboxIndex].url}
+                  alt="Enlarged document"
+                  className="lightbox-main-img"
+                  style={{
+                    transform: `scale(${lightboxZoom})`,
+                    cursor: lightboxZoom > 1 ? 'grab' : 'zoom-in'
+                  }}
+                  onClick={() => setLightboxZoom(prev => prev > 1 ? 1 : 1.5)}
+                />
+              ) : (
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {galleryMedia[lightboxIndex].url.includes('youtube.com') || galleryMedia[lightboxIndex].url.includes('youtu.be') ? (
+                    <iframe
+                      width="560"
+                      height="315"
+                      src={galleryMedia[lightboxIndex].url.replace('watch?v=', 'embed/')}
+                      title="Video demo"
+                      frameBorder="0"
+                      allowFullScreen
+                      style={{ maxWidth: '80vw', maxHeight: '80vh', aspectRatio: '16/9' }}
+                    />
+                  ) : (
+                    <video
+                      src={galleryMedia[lightboxIndex].url}
+                      controls
+                      style={{ maxHeight: '80vh', maxWidth: '80vw', objectFit: 'contain' }}
+                    />
+                  )}
+                </div>
+              )
+            )}
+
+            {/* Right navigation arrow */}
+            {galleryMedia.length > 1 && (
+              <button 
+                type="button"
+                className="lightbox-arrow lightbox-arrow-right"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxIndex(prev => (prev + 1) % galleryMedia.length);
+                  setLightboxZoom(1);
+                }}
+              >
+                ›
+              </button>
+            )}
           </div>
 
-          {/* Viewport */}
-          <div style={{ overflow: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-            <img
-              src={activeBrochureImg}
-              alt="Zoomed brochure page"
-              style={{
-                maxHeight: '85vh',
-                maxWidth: '85vw',
-                objectFit: 'contain',
-                transform: `scale(${brochureZoom})`,
-                transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                boxShadow: 'var(--shadow-lg)'
-              }}
-              onClick={(e) => e.stopPropagation()}
-            />
+          {/* Footer info strip */}
+          <div className="lightbox-footer" onClick={(e) => e.stopPropagation()}>
+            <p className="lightbox-info">
+              Image {lightboxIndex + 1} of {galleryMedia.length} — Use Left/Right arrow keys to navigate
+            </p>
           </div>
         </div>
       )}

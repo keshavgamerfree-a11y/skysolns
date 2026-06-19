@@ -22,6 +22,7 @@ import ProductDetailView from './components/ProductDetailView';
 import DynamicSections from './components/DynamicSections';
 import AboutDirector from './components/AboutDirector';
 import Careers from './components/Careers';
+import LegalPageView from './components/LegalPageView';
 
 import './App.css';
 
@@ -110,6 +111,8 @@ function App() {
     currentView = 'about-the-director';
   } else if (currentPath === '/careers') {
     currentView = 'careers';
+  } else if (['/privacy-policy', '/terms-conditions', '/accessibility', '/cookie-policy', '/disclaimer'].includes(currentPath)) {
+    currentView = currentPath.substring(1);
   } else if (parts[0] === 'products') {
     if (parts.length === 1) {
       currentView = 'products-index';
@@ -247,6 +250,12 @@ function App() {
               <AboutDirector content={content?.director} onOpenContact={openContactWithContext} />
             ) : currentView === 'careers' ? (
               <Careers content={content?.careers} onOpenContact={openContactWithContext} />
+            ) : ['privacy-policy', 'terms-conditions', 'accessibility', 'cookie-policy', 'disclaimer'].includes(currentView) ? (
+              <LegalPageView
+                legalData={content?.legal}
+                policyKey={currentView}
+                navigateTo={navigateTo}
+              />
             ) : currentView === 'products-index' ? (
               /* Products Index View */
               <ProductsView

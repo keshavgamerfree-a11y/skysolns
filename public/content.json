@@ -64,7 +64,7 @@
   "footer": {
     "phone": "+91 9908140066",
     "email": "shylender@skylifesciencessolutions.com",
-    "supportLink": "#",
+    "supportLink": "https://maps.app.goo.gl/EaQfJRTGq6DgPrnR6",
     "termsLink": "#",
     "privacyLink": "#",
     "accessibilityLink": "#",
@@ -79,13 +79,12 @@
     "description": "Engineering the Future of Smart Manufacturing\n\nSky Lifesciences Solutions is a technology-driven organization focused on bringing next-generation manufacturing solutions to the pharmaceutical, chemical, agrochemical, and specialty chemical sectors.\n\nWe bridge the gap between traditional manufacturing and the factories of the future by integrating:\nContinuous Manufacturing \n\nFlow Chemistry,\nProcess Intensification,  \nComplete Lab Setup,  \nDigital Manufacturing,  \nGreen Chemistry,  \nIndustry 4.0 Solutions & More  \n\nThrough strategic partnerships with global technology leaders and our deep industry expertise, we help organizations improve productivity, quality, safety, and sustainability."
   },
   "director": {
-    "name": "Dr. Shylender",
+    "name": "Mr. Bijapuri Shylender Kumar",
     "designation": "Director & Founder",
-    "biography": "Dr. Shylender is a visionary leader with over 20 years of experience in Life Sciences, pharmaceuticals, and manufacturing technologies. He is committed to bringing sustainable and innovative process intensification to research and development. Under his guidance, Sky Life Sciences Solutions has partnered with international developers to transform manufacturing setups across the chemical and pharmaceutical fields.",
-    "image": "/logo.jpg",
+    "biography": "With over two decades of experience in the pharmaceutical, biotechnology, life sciences, and advanced manufacturing industries, Bijapuri Shylender has established himself as a trusted leader in driving innovation through advanced technologies, strategic partnerships, and sustainable manufacturing solutions.\n\nHis professional journey has been defined by a commitment to helping organizations adopt next-generation technologies that improve efficiency, scalability, product quality, and operational excellence. Through extensive experience working with leading global organizations, research institutions, and manufacturing companies, he has developed deep expertise in continuous manufacturing, flow chemistry, process intensification, advanced analytical technologies, and scientific business development.\n\nAt Sky Life Sciences Solutions, he leads the company's vision of accelerating the adoption of intelligent manufacturing technologies across the pharmaceutical, specialty chemical, agrochemical, and life sciences sectors. Under his leadership, the company has built strong collaborations with globally recognized technology providers and continues to support organizations in implementing future-ready manufacturing solutions.\n\nHis areas of expertise include:\n\n• Continuous Manufacturing Technologies\n• Flow Chemistry Solutions\n• Process Development & Scale-Up\n• Advanced Separation Technologies\n• Biopharmaceutical Solutions\n• Process Intensification\n• Green Chemistry & Sustainability\n• Technology Commercialization\n• Strategic Partnerships & Business Development\n\nA strong advocate of innovation and sustainability, he believes that the future of manufacturing lies in the convergence of continuous processing, artificial intelligence, automation, advanced analytics, and environmentally responsible technologies. His focus remains on helping organizations achieve safer operations, higher productivity, faster development cycles, and sustainable growth.\n\nBeyond technology adoption, he actively contributes to industry advancement through participation in leading conferences, exhibitions, technical forums, and collaborative innovation platforms. His efforts continue to foster meaningful partnerships between academia, research organizations, technology providers, and manufacturing industries.\n\nUnder his guidance, Sky Life Sciences Solutions has earned recognition for its contributions to continuous manufacturing, process innovation, flow chemistry, and technology-driven transformation. The company remains committed to empowering organizations with world-class solutions that enable smarter, safer, and more efficient manufacturing.\n\nHis long-term vision is to position Sky Life Sciences Solutions as a leading partner for intelligent manufacturing transformation, helping industries embrace the next generation of smart, data-driven, and sustainable production technologies.\n\n\"True innovation happens when technology, expertise, and collaboration come together to solve real-world challenges. At Sky Life Sciences Solutions, our mission is to empower organizations with the tools, knowledge, and partnerships needed to build a smarter, safer, and more sustainable future.\"\n\n— Bijapuri Shylender\nFounder & Director\nSky Life Sciences Solutions LLP",
+    "image": "/uploads/image_1781872222475.png",
     "gallery": [
-      "/uploads/lab_feasibility.png",
-      "/uploads/process_development.png"
+      "/uploads/image_1781872178794.png"
     ],
     "achievements": [
       "Pioneered flow chemistry systems integration in India",
@@ -93,7 +92,7 @@
       "Keynote speaker at Agrochemicals R&D Summit and ChemExpo",
       "Successfully established 100+ laboratory setups globally"
     ],
-    "linkedin": "https://www.linkedin.com/company/skylifesciencessolutions",
+    "linkedin": "https://www.linkedin.com/in/bijapuri-shylender",
     "contact": "shylender@skylifesciencessolutions.com"
   },
   "careers": {
@@ -489,11 +488,14 @@
       "category": "lab-feasibility",
       "desc": "Corning® Advanced-Flow™ Reactor (AFR)  \nTechnologies and Products\nCorning Advanced-Flow Reactors are industry-leading, \ndisruptive innovations that can help change the way \nchemicals are made. AFR enables inherently safer, efficient \ncontinuous manufacturing while significantly reducing \ncost, footprint, and environmental impact.\nCorning provides high quality product and process \nsolutions for the seamless scale-up from lab to \ncommercial mass productions of pharmaceutical \nintermediates, fine and specialty chemicals, as well  \nas new material synthesis.\nCorning Nebula™ Education Kits enable colleges and \nuniversities to provide students in chemistry, chemical \nengineering, and related majors with inherently safer \nequipment to become proficient in flow chemistry  \nand flow reactor operation.\nCorning is one of the world’s leading innovators in material \nscience. For more than a century, we have applied our \nunparalleled expertise in specialty glass, ceramics, and \noptical physics to develop products that have created  \nnew industries and transformed people’s lives",
       "img": "/uploads/image_1781644092355.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/Corning%20Nebula%20Education%20Kits%20Brochure%202026.pdf",
+      "pdf": "",
       "slug": "corning-nebula-education-kits",
       "technicalOverview": "• Available in two versions: Chemistry  \n   and Chemical Engineering\n• Enable inherently safer continuous  \nflow technology\n• Outstanding mixing and heat  \nexchange: patented HEART design\n• Seamless scale-up with other  \nAdvanced-Flow Reactor products\n• Digital interface for easy touch-based  \n   operation and wireless control",
       "images": [
         "/uploads/image_1781644092355.png"
+      ],
+      "brochureImages": [
+        "/uploads/image_1781872377894.png"
       ]
     },
     {
@@ -502,9 +504,12 @@
       "category": "lab-feasibility",
       "desc": "Lab Reactor System 2 \nStepping into flow chemistry\nLab Dosing Unit\n• Plug and play system\n• High chemical durability due to full metal-free system\n• Up to 4 liquid lines including one  \n   high precision syringe pump\n• 1 gas line with pressure sensor\n• Thermostat for reaction temperature control included\n• Easy to use touch screen control interface\n• Real time data monitoring & recording. Data  \n   transfer (Ethernet)\nLab Reactor Unit\n• Outstanding mixing and heat exchange:  \n   patented HEART design\n• Up to 2 fluidic modules\n• Optional cooling coil\n• Back pressure regulator \n   for pressure control\n• Camera integrated\n• Seamless scale-up with other  \n   Advanced-Flow™ Reactor products",
       "img": "/uploads/image_1781644397914.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20Lab%20Reactor%20System%202%20Brochure%202026.pdf",
+      "pdf": "",
       "technicalOverview": "• LED panel control through dosing  \n   module touch screen interface\n• Tunable LED irradiation source,  \n   with 6 different wavelengths\n• High intensity LED lighting\n• Efficient light penetration with  \n   both sides of glass fluidic  \n   module iullminated\n• Extended LED efficiency and lifetime  \n   due to active liquid cooling\n• Back pressure regulator  \n   for pressure control\n• Seamless scale-up with other  \n   higher throughput G1 and G3  \n   photoreactors products",
-      "slug": "lab-reactor-system-2"
+      "slug": "lab-reactor-system-2",
+      "brochureImages": [
+        "/uploads/image_1781885633363.png"
+      ]
     },
     {
       "id": "p-1781644948215",
@@ -512,9 +517,12 @@
       "category": "lab-feasibility",
       "desc": "Low-Flow Reactor System 2\nStepping into flow chemistry\n• Plug and play system\n• High chemical durability due to full metal-free system\nLab Dosing Unit\n• Up to 4 liquid lines with an option\nof a high precision syringe pump\n• 1 gas line with pressure sensor\n• Thermostat for reaction temperature control\n• Easy to use touch screen control interface\n• Real time data monitoring & recording. Data\ntransfer (Ethernet)",
       "img": "/uploads/image_1781644908179.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/Low%20Flow%20Reactor%20System%202%20Brochure%202026.pdf",
+      "pdf": "",
       "technicalOverview": "• Outstanding mixing and heat\nexchange: patented HEART design\n• Low hold-up\n• Highly flexible for multiple\nstep reactions\n• Multiple temperature zones\n• Up to 10 glass fluidic modules\n• Seamless scale-up with other\nAdvanced-Flow™ Reactors",
-      "slug": "low-flow-reactor-system-2"
+      "slug": "low-flow-reactor-system-2",
+      "brochureImages": [
+        "/uploads/image_1781885695913.png"
+      ]
     },
     {
       "id": "p-1781645137216",
@@ -522,9 +530,12 @@
       "category": "process-development",
       "desc": "G1 Reactor\nProcess development\nand small production\n• Outstanding mixing and heat exchange:\npatented HEART design\n• Small internal volume\n• High residence time\n• Highly flexible and multipurpose\n• High chemical durability\n• Transparent and compatible with\na light module for photochemistry\n• Hybrid glass/SiC solution\n• Seamless scale-up with other\nAdvanced-Flow™ Reactor products\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*",
       "img": "/uploads/image_1781645108270.png",
-      "pdf": "https://www.corning.com/worldwide/en/innovation/corning-emerging-innovations/advanced-flow-reactors.html",
+      "pdf": "",
       "technicalOverview": "• Reactor is multipurpose\n• Configuration can be customized\n• Injection points may be added\nanywhere on the reactor",
-      "slug": "g1-reactor"
+      "slug": "g1-reactor",
+      "brochureImages": [
+        "/uploads/image_1781885800548.png"
+      ]
     },
     {
       "id": "p-1781645299330",
@@ -532,9 +543,12 @@
       "category": "process-development",
       "desc": "G1 Reactor\nProcess development\nand small production\n• Outstanding mixing and heat exchange:\npatented HEART design\n• Small internal volume\n• High residence time\n• Highly flexible and multipurpose\n• High chemical durability (suitable for high\npH compounds and hydrofluoric acid)\n• Hybrid glass/SiC solution\n• Seamless scale-up with other\nAdvanced-Flow™ Reactor products\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*",
       "img": "/uploads/image_1781645286063.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20SiC%20Reactor%20Brochure%202026.pdf",
+      "pdf": "",
       "technicalOverview": "Reactor Configuration\n• Reactor is multipurpose\n• Configuration can be customized\n• Injection points may be added\nanywhere on the reactor",
-      "slug": "g1-sic-reactor"
+      "slug": "g1-sic-reactor",
+      "brochureImages": [
+        "/uploads/image_1781885870440.png"
+      ]
     },
     {
       "id": "p-1781645458885",
@@ -542,12 +556,15 @@
       "category": "process-development",
       "desc": "G1 Photo Reactor\nProcess development and\nsmall production Photo Reactor\n• Integration of a G1 glass reactor with\na multiple wavelength LED lighting module\n• Outstanding mixing and heat exchange:\npatented HEART design\n• Small internal volume\n• High residence time\n• Highly flexible and multipurpose\n• High chemical durability\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction Volume 1000X lower*\n• Residence time distribution 50X better*",
       "img": "/uploads/image_1781645456680.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20Photo%20Reactor%20Brochure%202026.pdf",
+      "pdf": "",
       "technicalOverview": "Lighting Module Features\n• Tunable UV LED irradiation source\navailable in multiple wavelength arrays\n• LED lighting intensity higher\nthan 100 mW/cm2\nG4\nProduction\n• Efficient light penetration with both\nsides of glass fluidic modules illuminated\n• Safe operation with low\ntemperature UV lighting technology\n• Extended LED lifetime due\nto efficient liquid cooling",
       "images": [
         "/uploads/image_1781645456680.png"
       ],
-      "slug": "g1-photo-reactor"
+      "slug": "g1-photo-reactor",
+      "brochureImages": [
+        "/uploads/image_1781885937387.png"
+      ]
     },
     {
       "id": "p-1781645644189",
@@ -555,9 +572,12 @@
       "category": "process-development",
       "desc": "G1 Process Development System\n• Flexible and versatile system\ndesign for process development\n• Compatible with any type of G1 reactor\nbased on glass or SiC fluidic modules\n• Up to 4 liquid dosing lines and 1 gas line,\noffering various materials of construction\nfor chemical compatibility\n• Flow control through reactant\nvessel weight measurement\n• Control system with touch screen interface\nenabling an easy control of main features\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*",
       "img": "/uploads/image_1781645638351.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20Process%20Development%20System%20Brochure%202026.pdf",
+      "pdf": "",
       "technicalOverview": "Reactor\nDosing\nlines\nThermostat\nDownstream\nequipment\nElectrical\ncabinet with\nautomation\nControl\nsystem\n1 G1 10 FM (SiC, Glass, or Hybrid)\n2 liquid dosing lines - Wetted materials:\nstainless steel / gear pump\n2 liquid dosing lines - Wetted materials:\nHastelloy / gear pump\n2 liquid dosing lines - Wetted materials:\nPFA & PTFE (metal free) / piston pump\n1 gas line - MOC: stainless steel\nAll being equipped of automated valves\n2 thermostats - 20⁰C* / 200⁰C\n2 thermostats 0⁰C* / 120⁰C\n*Lower temperature possible in option\nMetal free back pressure regulator\nwith automated control\n2 automated valves to switch\nin between collecting vessels\nBased on Siemens\nautomation devices\nComputer with human machine interface\nSoftware compliant with CFR 21 part 11\nData visualization through\ngraphs and recording\nConfigurable recipes\nFlow Rate\nUp\nto\n2000 ml/min\nTemperature\nPressure -600C\nto\n2000C\nUp to\n18\nbarg",
-      "slug": "g1-process-development-system"
+      "slug": "g1-process-development-system",
+      "brochureImages": [
+        "/uploads/image_1781886015614.png"
+      ]
     },
     {
       "id": "p-1781646128135",
@@ -565,9 +585,13 @@
       "category": "industrial-production",
       "desc": "Flexible and versatile system  \n  design for industrial production\n• FDA compliant subject to customer  \n   certification, including control software\n• Compatible with any type of Corning G1  \n   reactor, based on glass or SiC fluidic modules\n• Up to 6 liquid dosing lines and 1 gas line,  \n   offering various materials of construction  \n   for chemical compatibility\n• Metal free downstream equipment\n• Appropriate thermostat integrated into HMI\n• Fully automated system\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*",
       "img": "/uploads/image_1781646150884.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20Production%20System%20Brochure%202026.pdf",
+      "pdf": "",
       "technicalOverview": "Item Type\n(other limited options available on request)\nReactor\nDosing \nlines\nThermostat\nDownstream  \nequipment\nElectrical \ncabinet with \nautomation\nControl  \nsystem\n1 G1 10 FM (SiC, Glass, or Hybrid\n2 liquid dosing lines - Wetted materials:  \nstainless steel / gear pump\n2 liquid dosing lines - Wetted materials:  \nHastelloy / gear pump\n2 liquid dosing lines - Wetted materials:  \nPFA & PTFE (metal free) / piston pump\n1 gas line - MOC: stainless steel\nAll being equipped of automated valves\n2 thermostats - 20⁰C* / 200⁰C\n2 thermostats 0⁰C* / 120⁰C\n*Lower temperature possible in option\nMetal free back pressure regulator  \nwith automated control \n2 automated valves to switch  \nin between collecting vessels\nBased on Siemens  \nautomation devices\nComputer with human machine interface\nSoftware compliant with CFR 21 part 11\nData visualization through  \ngraphs and recording\nConfigurable recipes",
-      "slug": "g1-production-system"
+      "slug": "g1-production-system",
+      "brochureImages": [
+        "/uploads/image_1781886182843.png",
+        ""
+      ]
     },
     {
       "id": "p-1781646300798",
@@ -575,9 +599,12 @@
       "category": "industrial-production",
       "desc": "Pilot and Production Reactor\n• Outstanding mixing and heat exchange:  \n   patented HEART design\n• Large internal volume\n• High residence time\n• Highly flexible\n• Transparent and compatible with  \n   a light module for photochemistry\n• Seamless scale-up with other  \nAdvanced-Flow™ Reactors products\n• High chemical durability \n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*\nFluidic module size: \n310 x 250 mm",
       "img": "/uploads/image_1781646210421.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G3%20Reactor%20Brochure%202026.pdf",
+      "pdf": "",
       "technicalOverview": "Make industrial production  \nreal with G3 Reactor \n• Direct seamless scale up from G1 - G3 \nG4\nProduction\nMaterials \n• Shorter time to market* \n• Low space requirement* \n• Easy integration into existing unit \n• Turnkey solution \n• Technical support from lab test  \n   to industrial setup",
-      "slug": "g3-reactor"
+      "slug": "g3-reactor",
+      "brochureImages": [
+        "/uploads/image_1781886238044.png"
+      ]
     },
     {
       "id": "p-1781646480514",
@@ -585,9 +612,12 @@
       "category": "industrial-production",
       "desc": "G3 Photo Reactor - Production Reactor\n• Designed for photochemistry \n   with integrated LED lighting system\n• Outstanding mixing and heat exchange:  \n   patented HEART design\n• Large internal volume\n• High residence time\n• Highly flexible\n• Seamless scale-up with other  \nAdvanced-Flow™ Reactors products\n• High chemical durability \n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*\nFluidic module size: \n310 x 250 mm",
       "img": "/uploads/image_1781646472355.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G3%20Photo%20Reactor%20Brochure%202026.pdf",
+      "pdf": "",
       "technicalOverview": "Benefits and Features\nG3 Photo Reactor for industrial production \n• Shorter time to market* \n• Low space requirement* \n• Technical support from lab  \n   test to industrial startup\nG3 Photo Reactor lighting features \n• Monochromatic LED irradiation \n(different wavelengths available on demand)  \nG4\nProduction\nMaterials \n• Efficient light penetration with both  \n   sides of fluidic modules illuminated \n• Safe operation with low  \n   temperature lighting technology \n• Extended LED lifetime due  \n   to efficient liquid cooling",
-      "slug": "g3-photo-reactor"
+      "slug": "g3-photo-reactor",
+      "brochureImages": [
+        "/uploads/image_1781886397058.png"
+      ]
     },
     {
       "id": "p-1781646630261",
@@ -595,9 +625,12 @@
       "category": "industrial-production",
       "desc": "G4 SiC Reactor - Production Reactor\n• Outstanding mixing and heat exchange:  \n  patented HEART design\n• Large internal volume\n• High residence time\n• Highly flexible\n• Seamless scale-up with other  \nAdvanced-Flow™ Reactors products\n• High chemical durability  \n   (suitable for high pH compounds and hydrofluoric acid)\n• Mass transfer 100X better*\n• Heat transfer 1000X better*\n• Reaction volume 1000X lower*\n• Residence time distribution 50X better*\nFluidic module size: \n462 x 314 mm",
       "img": "/uploads/image_1781646610556.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G4%20SiC%20Reactor%20Brochure%202026.pdf",
+      "pdf": "",
       "technicalOverview": "Make industrial production  \nreal with G4 SiC Reactor \n• Direct seamless scale up from G1 - G4 \nG4\nProduction\nMaterials \n• Shorter time to market* \n• Low space requirement* \n• Easy integration into existing unit \n• Turnkey solution \n• Technical support from  \n   lab test to industrial setup",
-      "slug": "g4-reactor"
+      "slug": "g4-reactor",
+      "brochureImages": [
+        "/uploads/image_1781886459426.png"
+      ]
     },
     {
       "id": "p-1781646975668",
@@ -609,24 +642,17 @@
       "slug": "g5-reactor"
     },
     {
-      "id": "p-1781647196756",
-      "name": "Dosing Lines",
-      "category": "dosing-lines",
-      "desc": "A consistent and pulseless flow is key for flow chemistry. \nCorning can provide a suitable dosing system including \nflow control and safety valve for Low-Flow to G4 reactors.\nKey Features\n• Include electrical supply and human interface device  \n   (either locally or integrated in customer Decentralized  \n   Control System) \n• Engineered dosing lines \n• Highly flexible \n• High chemical durability \n• Mass transfer 100X better* \n• Heat transfer 1000X better* \n• Reaction volume 1000X lower* \n• Residence time distribution 50X better*",
-      "img": "/uploads/image_1781647175814.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/Dosing%20Lines%20Brochure%202026.pdf",
-      "technicalOverview": "Corning® Advanced-Flow™ reactors \ninclude a full range or services to  \nenhance customers’ projects from \ndevelopment, through implementation  \nand operation including: \n \n• Workshops and trainings \n• Quick feasibility test (QFT) \n• Basic and detailed auxiliary  \n   systems engineering \n• Customized turnkey solutions \n• Technical support \n• FAT/SAT and industrial start up \n• Assistance for FDA qualifications \n• Pre-and post purchase technical support \n• Compliance with international standards  \n   (ATEX, PED, SELO...)",
-      "slug": "dosing-lines"
-    },
-    {
       "id": "p-1781647543299",
       "name": "G1 Dosing Line (DL1A-11)",
       "category": "dosing-lines",
       "desc": "Consistent and pulseless flow is a key parameter for flow \nchemistry. Corning has developed suitable dosing systems \nfor Low-Flow to G4 reactors to deliver complete turnkey \nsolutions for process development and production. The \nDL1A-11 is a high precision dosing line specially designed \nto fit with Corning’s G1 reactor",
       "img": "/uploads/image_1781647512636.png",
-      "pdf": "https://www.corning.com/media/worldwide/Innovation/documents/AFR/G1%20Dosing%20Line%20Brochure%202026.pdf",
+      "pdf": "",
       "technicalOverview": "• Advanced gear pump and Coriolis  \n   mass flow meter technology \n• Precise and reproducible flow rate \n• Local or remote control through a PC \n• Pressure switch \n• Compact design and small internal volume \n• Dosing line can be stacked together  \nor installed side by side \n• User friendly \n• Easy rinsing and cleaning \n• Wide range of material compatibility \n• Mass transfer 100X better* \n• Heat transfer 1000X better* \n• Reaction volume 1000X lower* \n• Residence time distribution 50X better*",
-      "slug": "g1-dosing-line-dl1a-11"
+      "slug": "g1-dosing-line-dl1a-11",
+      "brochureImages": [
+        "/uploads/image_1781886889274.png"
+      ]
     },
     {
       "id": "p-1781648860907",
@@ -835,6 +861,18 @@
       "pdf": "file:///C:/Users/B%20KESHAV/.gemini/antigravity-ide/scratch/skylife-sciences/public/sky%20solutions%20final%20catalogue.pdf",
       "slug": "sky-life-sciences-solutions-complete-product-catalog",
       "technicalOverview": ""
+    },
+    {
+      "id": "p-1781886774673",
+      "name": "Dosing Lines Product",
+      "category": "dosing-lines",
+      "desc": "Dosing Lines\nA consistent and pulseless flow is key for flow chemistry. \nCorning can provide a suitable dosing system including \nflow control and safety valve for Low-Flow to G4 reactors.\nKey Features\n• Include electrical supply and human interface device  \n   (either locally or integrated in customer Decentralized  \n   Control System) \n• Engineered dosing lines \n• Highly flexible \n• High chemical durability \n• Mass transfer 100X better* \n• Heat transfer 1000X better* \n• Reaction volume 1000X lower* \n• Residence time distribution 50X better*",
+      "img": "/uploads/image_1781886769103.png",
+      "pdf": "",
+      "slug": "dosing-lines-product",
+      "brochureImages": [
+        "/uploads/image_1781886817052.png"
+      ]
     }
   ],
   "dynamicSections": [
@@ -910,5 +948,22 @@
       "name": "Call to Action Banner",
       "visible": true
     }
-  ]
+  ],
+  "legal": {
+    "privacy-policy": {
+      "content": "\nSky Life Sciences Solutions LLP respects your privacy and is committed to protecting any personal information that you provide while visiting our website. This Privacy Policy explains how we collect, use, store, and protect information obtained through our website and related services.\n\nBy accessing or using this website, you agree to the terms outlined in this Privacy Policy. If you do not agree with any part of this policy, please discontinue use of the website.\n\nInformation We Collect\n\nWhen you visit our website, we may automatically collect certain non-personal information, including but not limited to your IP address, browser type, operating system, device information, pages visited, referral sources, and general website usage statistics. This information helps us understand visitor behavior and improve the overall website experience.\n\nWe may also use cookies and similar technologies to enhance website functionality, remember user preferences, improve navigation, and analyze website performance. Cookies do not typically contain information that directly identifies an individual.\n\nWhen you voluntarily submit information through contact forms, enquiry forms, consultation requests, newsletter subscriptions, or other communication channels, we may collect personal information including:\n\nName\n\nCompany Name\n\nEmail Address\n\nPhone Number\n\nJob Title\n\nBusiness Address\n\nIndustry Information\n\nAny additional information voluntarily provided by you\n\nHow We Use Your Information\n\nSky Life Sciences Solutions LLP may use collected information for the following purposes:\n\nResponding to enquiries and consultation requests\n\nProviding information regarding products, technologies, services, and solutions\n\nFacilitating customer support and communication\n\nImproving website functionality and user experience\n\nConducting market research and business analysis\n\nSharing technical updates, event information, and company announcements\n\nMaintaining records of customer interactions\n\nSupporting sales, marketing, and business development activities\n\nComplying with applicable legal and regulatory obligations\n\nWe process information only for legitimate business purposes and strive to ensure that collected data is relevant and necessary.\n\nInformation Sharing\n\nSky Life Sciences Solutions LLP does not sell, rent, or trade personal information to third parties.\n\nInformation may be shared with trusted service providers, technology partners, website hosting providers, analytics providers, or professional advisors when necessary to operate our business and deliver services. Such parties are required to maintain confidentiality and protect personal information in accordance with applicable laws and contractual obligations.\n\nInformation may also be disclosed where required by law, legal process, regulatory authorities, or to protect the rights, safety, property, and legitimate interests of Sky Life Sciences Solutions LLP.\n\nData Security\n\nWe implement reasonable technical, administrative, and organizational safeguards to protect information against unauthorized access, disclosure, alteration, or destruction.\n\nWhile we strive to use commercially acceptable means to protect your information, no method of internet transmission or electronic storage can be guaranteed to be completely secure. Users should exercise appropriate caution when transmitting information electronically.\n\nCommunications\n\nWhen you contact Sky Life Sciences Solutions LLP through our website, email, phone, or other communication channels, we may retain records of such correspondence for customer service, quality assurance, training, and business purposes.\n\nWe may occasionally communicate with you regarding products, services, technical information, events, webinars, or industry updates that may be relevant to your interests. You may request to opt out of non-essential communications at any time.\n\nThird-Party Links\n\nOur website may contain links to external websites operated by manufacturers, partners, industry organizations, technology providers, or other third parties.\n\nOnce you leave our website, we do not have control over external websites and cannot be responsible for their privacy practices, content, or security. We encourage users to review the privacy policies of any third-party websites they visit.\n\nCookies and Analytics\n\nOur website may use cookies and analytics tools to understand visitor interactions and improve website performance.\n\nThese tools may collect anonymous information such as:\n\nPages visited\n\nTime spent on pages\n\nDevice information\n\nBrowser information\n\nGeneral geographic region\n\nTraffic sources\n\nUsers may choose to disable cookies through their browser settings, although certain website features may not function as intended.\n\nAccess, Correction and Removal of Information\n\nYou may request access to, correction of, or deletion of personal information that you have provided to Sky Life Sciences Solutions LLP, subject to applicable legal, contractual, and regulatory requirements.\n\nRequests may be submitted through the contact information provided below.\n\nPlease note that certain records may be retained where necessary for legitimate business purposes, legal compliance, dispute resolution, or contractual obligations.\n\nInternational Users\n\nSky Life Sciences Solutions LLP serves customers, partners, and organizations across various geographic regions. By using our website, you acknowledge that information may be processed and stored in jurisdictions where our service providers, technology partners, or business operations are located.\n\nChanges to this Privacy Policy\n\nSky Life Sciences Solutions LLP reserves the right to update, modify, or revise this Privacy Policy at any time without prior notice.\n\nAny updates will be posted on this page along with the revised effective date. Continued use of the website following changes constitutes acceptance of the updated Privacy Policy.\n\nContact Information\n\nFor any questions regarding this Privacy Policy, privacy practices, or requests related to your personal information, please contact:\n\nSky Life Sciences Solutions LLP\n\nEmail: [shylender@skylifesciencessolutions.com](mailto:shylender@skylifesciencessolutions.com)\n\nPhone: +91 9908140066\n\nWebsite: [www.skylifesciencessolutions.com](https://www.skylifesciencessolutions.com)\n\nEffective Date: July 2026"
+    },
+    "terms-conditions": {
+      "content": "Terms & Conditions\n\nWelcome to Sky Life Sciences Solutions LLP. By accessing and using this website, you agree to comply with and be bound by the following Terms and Conditions. If you do not agree with any part of these terms, please discontinue use of this website.\n\nUse of Website\n\nThis website is intended to provide information regarding Sky Life Sciences Solutions LLP, its products, services, technologies, partnerships, and industry activities.\n\nUsers may access, view, and download information from this website solely for lawful business, educational, research, or informational purposes.\n\nUnauthorized use of this website may result in legal action and termination of access.\n\nIntellectual Property\n\nAll content available on this website, including text, graphics, images, logos, product descriptions, brochures, videos, trademarks, design elements, and other materials, is the property of Sky Life Sciences Solutions LLP or its respective partners, manufacturers, licensors, and suppliers.\n\nNo content may be copied, reproduced, distributed, modified, republished, transmitted, or commercially exploited without prior written permission from the respective owner.\n\nProduct Information\n\nSky Life Sciences Solutions LLP strives to provide accurate and up-to-date information regarding products, technologies, specifications, and services.\n\nHowever, product specifications, features, availability, pricing, technical information, and manufacturer details may change without notice.\n\nInformation presented on this website should not be considered a contractual commitment and should be independently verified before making purchasing, engineering, research, or operational decisions.\n\nThird-Party Products and Manufacturers\n\nMany products and technologies presented on this website are manufactured, developed, or supplied by third-party organizations and technology partners.\n\nAll trademarks, product names, company names, and logos remain the property of their respective owners.\n\nSky Life Sciences Solutions LLP acts as a distributor, technology partner, consultant, or solution provider where applicable and does not claim ownership of third-party intellectual property.\n\nEnquiries and Communications\n\nUsers submitting enquiries, consultation requests, or contact forms agree that the information provided is accurate and complete.\n\nSky Life Sciences Solutions LLP reserves the right to respond, decline, or prioritize enquiries at its discretion.\n\nSubmission of an enquiry does not create any contractual relationship or guarantee of service.\n\nWebsite Availability\n\nWe make reasonable efforts to ensure uninterrupted access to the website. However, we do not guarantee continuous availability and may suspend, modify, or discontinue portions of the website without prior notice for maintenance, upgrades, security, or operational reasons.\n\nLimitation of Liability\n\nTo the fullest extent permitted by applicable law, Sky Life Sciences Solutions LLP shall not be liable for any direct, indirect, incidental, consequential, special, or punitive damages arising from:\n\nUse of the website\n\nInability to access the website\n\nReliance on website content\n\nThird-party links\n\nProduct information inaccuracies\n\nLoss of business, revenue, data, or opportunities\n\nUsers access and use this website at their own risk.\n\nExternal Links\n\nThis website may contain links to external websites operated by manufacturers, partners, industry organizations, and third parties.\n\nSky Life Sciences Solutions LLP does not control and is not responsible for the content, security, privacy practices, or availability of external websites.\n\nUsers are encouraged to review the policies of any external websites they visit.\n\nUser Conduct\n\nUsers agree not to:\n\nAttempt unauthorized access to website systems\n\nIntroduce malicious code or harmful software\n\nInterfere with website operations\n\nUse the website for unlawful activities\n\nMisrepresent identity or affiliation\n\nSubmit misleading or fraudulent information\n\nViolations may result in restricted access and legal action where applicable.\n\nChanges to Terms\n\nSky Life Sciences Solutions LLP reserves the right to update, revise, or modify these Terms and Conditions at any time without prior notice.\n\nContinued use of the website following updates constitutes acceptance of the revised terms.\n\nGoverning Law\n\nThese Terms and Conditions shall be governed by and interpreted in accordance with the laws of India.\n\nAny disputes arising from the use of this website shall be subject to the jurisdiction of the courts located in Hyderabad, Telangana, India.\n\nContact Information\n\nSky Life Sciences Solutions LLP\n\nEmail: [shylender@skylifesciencessolutions.com](mailto:shylender@skylifesciencessolutions.com)\n\nPhone: +91 9908140066\n\nWebsite: [www.skylifesciencessolutions.com](https://www.skylifesciencessolutions.com)\n\nEffective Date: July 2026"
+    },
+    "cookie-policy": {
+      "content": "Cookie Policy\n\nSky Life Sciences Solutions LLP uses cookies and similar technologies to improve website functionality, enhance user experience, analyze website performance, and better understand visitor interactions.\n\nThis Cookie Policy explains how cookies are used when you visit our website.\n\nWhat Are Cookies?\n\nCookies are small text files stored on your device when you visit a website. They help websites remember information about your visit and improve future browsing experiences.\n\nCookies generally do not contain information that directly identifies an individual user.\n\nHow We Use Cookies\n\nSky Life Sciences Solutions LLP may use cookies to:\n\nImprove website functionality\n\nRemember user preferences\n\nEnhance navigation and usability\n\nAnalyze website traffic and visitor behavior\n\nMeasure website performance\n\nMaintain website security\n\nImprove content relevance\n\nTypes of Cookies We Use\n\nEssential Cookies\n\nThese cookies are necessary for the operation of the website and enable core functionality such as page navigation, security features, and access to certain website services.\n\nPerformance & Analytics Cookies\n\nThese cookies help us understand how visitors interact with the website by collecting anonymous information regarding page visits, traffic sources, user behavior, and website performance.\n\nFunctionality Cookies\n\nThese cookies remember preferences such as language settings, form information, and user choices to provide a more personalized experience.\n\nSecurity Cookies\n\nSecurity-related cookies may be used to help identify suspicious activity, protect against misuse, and improve website security.\n\nThird-Party Cookies\n\nCertain pages may include content, tools, maps, videos, social media integrations, or external services provided by third parties.\n\nThese third-party services may place their own cookies in accordance with their individual privacy policies.\n\nManaging Cookies\n\nMost web browsers allow users to control, block, or delete cookies through browser settings.\n\nUsers may:\n\nAccept all cookies\n\nReject all cookies\n\nDelete stored cookies\n\nConfigure notifications before cookies are stored\n\nPlease note that disabling cookies may affect website functionality and certain features may not operate as intended.\n\nAnalytics Services\n\nSky Life Sciences Solutions LLP may use website analytics tools to better understand visitor behavior and improve website performance.\n\nInformation collected may include:\n\nPages viewed\n\nTime spent on pages\n\nDevice type\n\nBrowser type\n\nApproximate geographic region\n\nTraffic source\n\nThis information is generally aggregated and does not personally identify individual visitors.\n\nUpdates to This Policy\n\nSky Life Sciences Solutions LLP reserves the right to modify this Cookie Policy at any time.\n\nUpdates will be posted on this page and become effective immediately upon publication.\n\nContact Information\n\nIf you have questions regarding our use of cookies, please contact:\n\nSky Life Sciences Solutions LLP\n\nEmail: [shylender@skylifesciencessolutions.com](mailto:shylender@skylifesciencessolutions.com)\n\nPhone: +91 9908140066\n\nWebsite: [www.skylifesciencessolutions.com](https://www.skylifesciencessolutions.com)\n\nEffective Date: July 2026"
+    },
+    "disclaimer": {
+      "content": "\nThe information provided on this website by Sky Life Sciences Solutions LLP is intended solely for general informational and business purposes. While we strive to ensure that all information is accurate, current, and reliable, we make no representations or warranties of any kind, express or implied, regarding the completeness, accuracy, suitability, reliability, or availability of the information, products, services, technologies, specifications, brochures, images, or related content contained on this website.\n\nProduct descriptions, technical specifications, performance data, images, brochures, and application information may be sourced from manufacturers, technology partners, suppliers, or third-party organizations. Such information is subject to change without notice and may not always reflect the latest product updates or revisions.\n\nSky Life Sciences Solutions LLP recommends that customers contact our team directly to verify specifications, compatibility, availability, pricing, regulatory requirements, and application suitability before making purchasing, research, engineering, manufacturing, or operational decisions.\n\nReferences to third-party products, technologies, trademarks, company names, logos, and brands remain the property of their respective owners. Their appearance on this website does not imply ownership, endorsement, or exclusive affiliation unless explicitly stated.\n\nAny reliance placed on information provided through this website is strictly at the user's own risk. Sky Life Sciences Solutions LLP shall not be liable for any direct, indirect, incidental, consequential, or special damages arising from the use of this website or reliance upon any information contained herein.\n\nThis website may contain links to external websites maintained by manufacturers, partners, industry organizations, and third parties. Sky Life Sciences Solutions LLP has no control over the content, availability, accuracy, security, or privacy practices of external websites and assumes no responsibility for them.\n\nAll website content is provided \"as is\" without warranties of any kind. Sky Life Sciences Solutions LLP reserves the right to modify, update, remove, or revise content at any time without prior notice.\n\nFor the most current product information, technical support, quotations, and application guidance, please contact Sky Life Sciences Solutions LLP directly.\n\nContact Information\n\nSky Life Sciences Solutions LLP\n\nEmail: [shylender@skylifesciencessolutions.com](mailto:shylender@skylifesciencessolutions.com)\n\nPhone: +91 9908140066\n\nWebsite: [www.skylifesciencessolutions.com](https://www.skylifesciencessolutions.com)\n\nEffective Date: July 2026"
+    },
+    "accessibility": {
+      "content": "\nSky Life Sciences Solutions LLP is committed to providing a website experience that is accessible, inclusive, and usable for all visitors, including individuals with disabilities.\n\nWe continuously work to improve the accessibility, usability, and overall user experience of our website by following recognized web accessibility principles and industry best practices.\n\nOur goal is to ensure that users can access information, products, services, and resources regardless of the device, browser, or assistive technology being used.\n\nWe strive to support accessibility through:\n\nClear and readable content\n\nResponsive mobile-friendly design\n\nLogical website navigation\n\nKeyboard-accessible functionality where possible\n\nReadable color contrast and typography\n\nAlternative text for relevant images\n\nConsistent page layouts\n\nContinuous accessibility improvements\n\nWhile we make every effort to maintain and improve accessibility, some areas of the website may not yet fully meet every accessibility standard due to ongoing updates, third-party content, or technical limitations.\n\nWe are committed to identifying and addressing accessibility barriers wherever possible.\n\nIf you encounter difficulty accessing any information, feature, document, product brochure, or section of our website, we encourage you to contact us so that we can provide the information through an alternative method and work toward resolving the issue.\n\nFeedback from users plays an important role in helping us improve accessibility and ensure a better experience for all visitors.\n\nContact Information\n\nSky Life Sciences Solutions LLP\n\nEmail: [shylender@skylifesciencessolutions.com](mailto:shylender@skylifesciencessolutions.com)\n\nPhone: +91 9908140066\n\nWebsite: [www.skylifesciencessolutions.com](https://www.skylifesciencessolutions.com)\n\nWe welcome feedback regarding the accessibility of our website and are committed to ongoing improvements that support equal access for all users.\n\nEffective Date: July 2026"
+    }
+  }
 }

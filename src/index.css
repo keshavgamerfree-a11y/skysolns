@@ -1921,3 +1921,33 @@ body > .skiptranslate {
   color: var(--text-secondary);
 }
 
+/* Legal Compliance Page Layout & Links */
+.legal-link {
+  color: var(--accent-blue) !important;
+  text-decoration: underline !important;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.legal-link:hover {
+  color: var(--accent-blue-hover) !important;
+}
+
+@media (max-width: 768px) {
+  .legal-layout {
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+  
+  .legal-sidebar {
+    width: 100% !important;
+    position: static !important;
+    padding: 16px !important;
+  }
+  
+  .legal-document-main {
+    padding: 24px !important;
+  }
+}
+

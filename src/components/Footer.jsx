@@ -11,9 +11,6 @@ export default function Footer({ footerContent, onOpenContact, navigateTo, servi
   const email = footerContent?.email || "shylender@skylifesciencessolutions.com";
   const mapUrl = footerContent?.mapEmbedUrl || "";
   const supportLink = footerContent?.supportLink || "#";
-  const termsLink = footerContent?.termsLink || "#";
-  const privacyLink = footerContent?.privacyLink || "#";
-  const accessibilityLink = footerContent?.accessibilityLink || "#";
 
   const socials = {
     linkedin: footerContent?.socials?.linkedin || "https://www.linkedin.com/company/skylifesciencessolutions",
@@ -313,7 +310,7 @@ export default function Footer({ footerContent, onOpenContact, navigateTo, servi
                     Request Consultation
                   </button>
                 </li>
-                <li><a href={supportLink} className="footer-link" style={{ fontSize: '13px', color: 'var(--text-secondary)', textDecoration: 'none' }}>Support Center</a></li>
+                <li><a href={supportLink} target="_blank" rel="noopener noreferrer" className="footer-link" title="Visit Our Office – 5th Floor, Sky Life Sciences Solutions Office" style={{ fontSize: '13px', color: 'var(--text-secondary)', textDecoration: 'none' }}>Support Centre</a></li>
               </ul>
             </div>
 
@@ -366,11 +363,15 @@ export default function Footer({ footerContent, onOpenContact, navigateTo, servi
           </span>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-            <a href={termsLink} className="footer-bottom-link" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontSize: '12px' }}>Terms of Use</a>
+            <a href="/privacy-policy" onClick={(e) => handleFooterLinkClick(e, '/privacy-policy')} className="footer-bottom-link" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontSize: '12px' }}>Privacy Policy</a>
             <span style={{ color: 'var(--border-color-dark)', fontSize: '12px' }}>|</span>
-            <a href={privacyLink} className="footer-bottom-link" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontSize: '12px' }}>Privacy Policy</a>
+            <a href="/terms-conditions" onClick={(e) => handleFooterLinkClick(e, '/terms-conditions')} className="footer-bottom-link" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontSize: '12px' }}>Terms & Conditions</a>
             <span style={{ color: 'var(--border-color-dark)', fontSize: '12px' }}>|</span>
-            <a href={accessibilityLink} className="footer-bottom-link" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontSize: '12px' }}>Accessibility</a>
+            <a href="/accessibility" onClick={(e) => handleFooterLinkClick(e, '/accessibility')} className="footer-bottom-link" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontSize: '12px' }}>Accessibility</a>
+            <span style={{ color: 'var(--border-color-dark)', fontSize: '12px' }}>|</span>
+            <a href="/cookie-policy" onClick={(e) => handleFooterLinkClick(e, '/cookie-policy')} className="footer-bottom-link" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontSize: '12px' }}>Cookie Policy</a>
+            <span style={{ color: 'var(--border-color-dark)', fontSize: '12px' }}>|</span>
+            <a href="/disclaimer" onClick={(e) => handleFooterLinkClick(e, '/disclaimer')} className="footer-bottom-link" style={{ textDecoration: 'none', color: 'var(--text-secondary)', fontSize: '12px' }}>Disclaimer</a>
             <span style={{ color: 'var(--border-color-dark)', fontSize: '12px' }}>|</span>
             <a href="/admin" onClick={(e) => { e.preventDefault(); navigateTo('/admin'); }} className="footer-bottom-link" style={{ opacity: 0.35, textDecoration: 'none', color: 'var(--text-secondary)', fontSize: '12px' }}>CMS Login</a>
           </div>

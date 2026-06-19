@@ -44,6 +44,11 @@ function IntelligentMediaInput({ value, onChange, placeholder, onBrowseLibrary, 
       body: formData
     })
       .then(async res => {
+        if (res.status === 401 || res.status === 403) {
+          localStorage.removeItem('skylife_admin_token');
+          window.location.reload();
+          return;
+        }
         const data = await res.json();
         if (res.ok) {
           onChange(data.url);
@@ -270,7 +275,7 @@ const exportToCSV = (rows) => {
 export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('skylife_admin_token') === 'fake-jwt-token-skylife-123';
+    return !!localStorage.getItem('skylife_admin_token');
   });
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [authError, setAuthError] = useState('');
@@ -297,6 +302,26 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
 
   const [newLeadsCount, setNewLeadsCount] = useState(0);
 
+  // Notification banner
+  const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
+
+  const triggerNotification = useCallback((message, type = 'success') => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: 'success' });
+    }, 4000);
+  }, []);
+
+  const handleAuthError = useCallback((res) => {
+    if (res.status === 401 || res.status === 403) {
+      localStorage.removeItem('skylife_admin_token');
+      setIsAuthenticated(false);
+      triggerNotification('Session expired or unauthorized. Please log in again.', 'danger');
+      return true;
+    }
+    return false;
+  }, [triggerNotification]);
+
   useEffect(() => {
     const limit = Date.now() - 24 * 60 * 60 * 1000;
     const count = enquiries.filter(e => {
@@ -317,16 +342,17 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
       headers: getHeaders()
     })
       .then(res => {
-        if (!res.ok) throw new Error('Unauthorized');
+        if (handleAuthError(res)) return null;
+        if (!res.ok) throw new Error('Failed to fetch enquiries');
         return res.json();
       })
       .then(data => {
-        if (Array.isArray(data)) {
+        if (data && Array.isArray(data)) {
           setEnquiries(data);
         }
       })
       .catch(err => console.error('Failed to fetch enquiries:', err));
-  }, []);
+  }, [handleAuthError]);
 
   const getFilteredEnquiries = () => {
     return enquiries.filter(enq => {
@@ -367,6 +393,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
       headers: getHeaders()
     })
       .then(async res => {
+        if (handleAuthError(res)) return;
         if (res.ok) {
           fetchEnquiries();
           triggerNotification('Enquiry deleted successfully', 'success');
@@ -387,9 +414,6 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
   const [mediaList, setMediaList] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
-
-  // Notification banner
-  const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
 
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved', 'saving', 'unsaved', 'error'
   const isFirstRender = useRef(true);
@@ -428,6 +452,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
       body: JSON.stringify(data)
     })
       .then(async res => {
+        if (handleAuthError(res)) return;
         if (res.ok) {
           onUpdateContent(data);
           setSaveStatus('saved');
@@ -439,7 +464,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
         console.error('Auto-save network error:', err);
         setSaveStatus('error');
       });
-  }, [localContent, onUpdateContent]);
+  }, [localContent, onUpdateContent, handleAuthError]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -509,16 +534,21 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
   const [importPreview, setImportPreview] = useState(null);
 
   // Fetch all media from library
-  const fetchMedia = () => {
-    fetch('/api/media')
-      .then(res => res.json())
+  const fetchMedia = useCallback(() => {
+    fetch('/api/media', {
+      headers: getHeaders()
+    })
+      .then(res => {
+        if (handleAuthError(res)) return null;
+        return res.json();
+      })
       .then(data => {
-        if (Array.isArray(data)) {
+        if (data && Array.isArray(data)) {
           setMediaList(data);
         }
       })
       .catch(err => console.error('Failed to fetch media library:', err));
-  };
+  }, [handleAuthError]);
 
   // Fetch media and enquiries if authenticated on mount / token change
   useEffect(() => {
@@ -526,15 +556,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
       fetchMedia();
       fetchEnquiries();
     }
-  }, [isAuthenticated, fetchEnquiries]);
-
-  // Show notification alert helper
-  const triggerNotification = (message, type = 'success') => {
-    setNotification({ show: true, message, type });
-    setTimeout(() => {
-      setNotification({ show: false, message: '', type: 'success' });
-    }, 4000);
-  };
+  }, [isAuthenticated, fetchMedia, fetchEnquiries]);
 
   const updateHeroField = (field, value) => {
     const heroCopy = { ...(localContent.hero || {}) };
@@ -716,6 +738,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
       body: formData
     })
       .then(async res => {
+        if (handleAuthError(res)) return;
         const data = await res.json();
         if (res.ok) {
           fetchMedia(); // Refresh media library list
@@ -744,6 +767,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
       headers: getHeaders()
     })
       .then(async res => {
+        if (handleAuthError(res)) return;
         if (res.ok) {
           fetchMedia(); // refresh list
           triggerNotification('Media file deleted', 'success');
@@ -772,6 +796,8 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
         headers: { ...getHeaders(), 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: importUrl.trim() })
       });
+
+      if (handleAuthError(res)) return;
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Import failed');
@@ -1179,6 +1205,12 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
               👣 Footer
             </button>
             <button
+              className={`admin-nav-item ${activeTab === 'legal' ? 'active' : ''}`}
+              onClick={() => { setActiveTab('legal'); setMediaPickerTarget(null); }}
+            >
+              ⚖️ Legal Pages
+            </button>
+            <button
               className={`admin-nav-item ${activeTab === 'settings' ? 'active' : ''}`}
               onClick={() => { setActiveTab('settings'); setMediaPickerTarget(null); setMediaSearch(''); }}
             >
@@ -1218,6 +1250,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
                 {activeTab === 'enquiries' && 'Enquiry Leads & Contact Submissions'}
                 {activeTab === 'highlights' && 'Recent Highlights & Achievements'}
                 {activeTab === 'footer' && 'Footer Settings — Contact, Socials & Map'}
+                {activeTab === 'legal' && 'Legal & Compliance Policy Editor'}
                 {activeTab === 'settings' && (mediaPickerTarget ? 'Choose File from Media Library' : 'CMS Settings & Media Library')}
               </h1>
               <p className="admin-panel-subtitle">
@@ -1229,6 +1262,7 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
                 {activeTab === 'enquiries' && 'Search, filter, view details, export to CSV, or delete website lead notifications.'}
                 {activeTab === 'highlights' && 'Manage carousel highlights cards, titles, descriptions, and media contents.'}
                 {activeTab === 'footer' && 'Update email, phone, LinkedIn, Instagram, Google Map embed, and legal links.'}
+                {activeTab === 'legal' && 'Review and edit Privacy Policy, Terms & Conditions, Accessibility Statement, Cookie Policy, and Disclaimer.'}
                 {activeTab === 'settings' && (mediaPickerTarget ? `Pick a file to set as ${mediaPickerTarget.field} for ${mediaPickerTarget.type}.` : 'Upload and delete images, specification sheets, and browse assets.')}
               </p>
             </div>
@@ -3391,6 +3425,96 @@ export default function AdminDashboard({ content, onUpdateContent, onGoHome }) {
                     );
                   })}
               </div>
+            </div>
+          )}
+
+          {/* TAB: LEGAL PAGES */}
+          {activeTab === 'legal' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ padding: '12px 16px', background: 'rgba(56,189,248,0.06)', border: '1px solid rgba(56,189,248,0.15)', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                <span style={{ fontSize: '13px', color: '#94A3B8' }}>
+                  Edit the legal policies below. Autosave is triggered automatically when clicking outside or typing. Do not use generic placeholders.
+                </span>
+              </div>
+
+              {['privacy-policy', 'terms-conditions', 'accessibility', 'cookie-policy', 'disclaimer'].map((key) => {
+                const policy = localContent.legal?.[key] || { title: key.replace('-', ' '), content: '', lastUpdated: '' };
+                return (
+                  <div key={key} className="admin-card-box" style={{ background: '#1E293B', padding: '28px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '16px', color: '#FFF', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      ⚖️ {policy.title}
+                    </h3>
+                    
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                      <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                        <label className="admin-form-label">Policy Title</label>
+                        <input
+                          type="text"
+                          className="admin-form-control"
+                          value={policy.title}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setLocalContent(prev => {
+                              const copy = { ...prev };
+                              copy.legal = { ...copy.legal };
+                              copy.legal[key] = { ...copy.legal[key], title: val };
+                              return copy;
+                            });
+                          }}
+                          onBlur={handleFieldBlur}
+                        />
+                      </div>
+                      <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                        <label className="admin-form-label">Last Updated Date</label>
+                        <input
+                          type="text"
+                          className="admin-form-control"
+                          value={policy.lastUpdated}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setLocalContent(prev => {
+                              const copy = { ...prev };
+                              copy.legal = { ...copy.legal };
+                              copy.legal[key] = { ...copy.legal[key], lastUpdated: val };
+                              return copy;
+                            });
+                          }}
+                          onBlur={handleFieldBlur}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                      <label className="admin-form-label">Policy Content (markdown / text)</label>
+                      <textarea
+                        className="admin-form-control"
+                        rows="12"
+                        value={policy.content}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setLocalContent(prev => {
+                            const copy = { ...prev };
+                            copy.legal = { ...copy.legal };
+                            copy.legal[key] = { ...copy.legal[key], content: val };
+                            return copy;
+                          });
+                        }}
+                        onPaste={(e) => handlePasteTextarea(e, (val) => {
+                          setLocalContent(prev => {
+                            const copy = { ...prev };
+                            copy.legal = { ...copy.legal };
+                            copy.legal[key] = { ...copy.legal[key], content: val };
+                            return copy;
+                          });
+                        })}
+                        onBlur={handleFieldBlur}
+                        placeholder={`Write the official ${policy.title} content here...`}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </main>

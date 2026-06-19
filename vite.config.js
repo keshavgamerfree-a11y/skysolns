@@ -1,12 +1,13 @@
 /* global Buffer, process */
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import fs from 'fs'
 import path from 'path'
 import { MongoClient } from 'mongodb'
 import nodemailer from 'nodemailer'
+import crypto from 'crypto'
 
-const mongoUri = process.env.MONGODB_URI;
+let mongoUri = process.env.MONGODB_URI;
 let mongoDb = null;
 let dbPromise = null;
 
@@ -129,18 +130,124 @@ function parseJson(req) {
   });
 }
 
-export default defineConfig({
-  plugins: [
-    react(),
-    {
-      name: 'cms-api-middleware',
-      configureServer(server) {
-        server.middlewares.use(async (req, res, next) => {
-          // Verify authentication token for modifying endpoints
-          const checkAuth = (headers) => {
-            const authHeader = headers['authorization'] || '';
-            return authHeader === 'Bearer fake-jwt-token-skylife-123';
-          };
+// Rate Limiting Cache Map and Verification Helper
+const rateLimitCache = new Map();
+function checkRateLimit(ip, limit = 5, windowMs = 60000) {
+  const now = Date.now();
+  if (!rateLimitCache.has(ip)) {
+    rateLimitCache.set(ip, [now]);
+    return false;
+  }
+  const timestamps = rateLimitCache.get(ip).filter(t => now - t < windowMs);
+  if (timestamps.length >= limit) {
+    return true;
+  }
+  timestamps.push(now);
+  rateLimitCache.set(ip, timestamps);
+  return false;
+}
+
+// Cryptographic Session Tokens Generator and Validator (HMAC-SHA256 based)
+function generateSessionToken(username, secret) {
+  const expiry = Date.now() + 2 * 60 * 60 * 1000; // 2 hours validity
+  const payload = JSON.stringify({ u: username, exp: expiry });
+  const signature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
+  return Buffer.from(payload + '.' + signature).toString('base64');
+}
+
+function verifySessionToken(token, secret) {
+  try {
+    const decoded = Buffer.from(token, 'base64').toString('utf8');
+    const parts = decoded.split('.');
+    if (parts.length !== 2) return false;
+    const payloadStr = parts[0];
+    const signature = parts[1];
+    
+    const expectedSignature = crypto.createHmac('sha256', secret).update(payloadStr).digest('hex');
+    if (signature !== expectedSignature) return false;
+    
+    const payload = JSON.parse(payloadStr);
+    if (Date.now() > payload.exp) return false;
+    
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Input Sanitization Helpers (XSS, Script Injections protection)
+function sanitizeInput(str) {
+  if (typeof str !== 'string') return str;
+  return str
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;');
+}
+
+function sanitizeHtmlContent(html) {
+  if (typeof html !== 'string') return html;
+  let clean = html
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<iframe[^>]*>[\s\S]*?<\/iframe>/gi, '');
+  clean = clean.replace(/on\w+\s*=\s*(['"])(.*?)\1/gi, '');
+  clean = clean.replace(/javascript:/gi, '');
+  return clean;
+}
+
+function sanitizeCmsContent(obj) {
+  if (obj === null || obj === undefined) return obj;
+  if (typeof obj === 'string') {
+    return sanitizeHtmlContent(obj);
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeCmsContent(item));
+  }
+  if (typeof obj === 'object') {
+    const cleaned = {};
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        cleaned[key] = sanitizeCmsContent(obj[key]);
+      }
+    }
+    return cleaned;
+  }
+  return obj;
+}
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  Object.assign(process.env, env);
+  mongoUri = process.env.MONGODB_URI;
+
+  return {
+    plugins: [
+      react(),
+      {
+        name: 'cms-api-middleware',
+        configureServer(server) {
+          server.middlewares.use(async (req, res, next) => {
+            const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+
+            // Set recommended security response headers
+            res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+            res.setHeader('X-Content-Type-Options', 'nosniff');
+            res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+            res.setHeader('X-XSS-Protection', '1; mode=block');
+            res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com; iframe-src 'self' https://www.youtube.com https://www.google.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:* ws://localhost:* https://*;");
+
+            // Verify authentication token using cryptographically signed session verification
+            const checkAuth = (headers) => {
+              const authHeader = headers['authorization'] || '';
+              if (!authHeader.startsWith('Bearer ')) return false;
+              const token = authHeader.substring(7);
+              const jwtSecret = process.env.JWT_SECRET || 'fake-jwt-token-skylife-123';
+              return verifySessionToken(token, jwtSecret);
+            };
 
           const uploadDir = path.join(process.cwd(), 'public', 'uploads');
           if (!fs.existsSync(uploadDir)) {
@@ -150,6 +257,12 @@ export default defineConfig({
           // ─── ENQUIRIES ENDPOINTS ──────────────────────────────────────────
           if (req.url === '/api/enquiries' && req.method === 'POST') {
             try {
+              if (checkRateLimit(ip, 5, 60000)) {
+                res.writeHead(429, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Too many enquiry submissions. Please try again later.' }));
+                return;
+              }
+
               const body = await parseJson(req);
               if (!body.name || !body.email || !body.message) {
                 res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -157,18 +270,35 @@ export default defineConfig({
                 return;
               }
 
+              // Server-side validations
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (!emailRegex.test(body.email)) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid email address format' }));
+                return;
+              }
+
+              if (body.phone) {
+                const phoneRegex = /^\+?[0-9\s\-()]{7,25}$/;
+                if (!phoneRegex.test(body.phone)) {
+                  res.writeHead(400, { 'Content-Type': 'application/json' });
+                  res.end(JSON.stringify({ error: 'Invalid phone number format' }));
+                  return;
+                }
+              }
+
               const newEnquiry = {
                 id: 'enq-' + Date.now() + '-' + Math.random().toString(36).substring(2, 11),
-                name: body.name,
-                company: body.company || '',
-                phone: body.phone || '',
-                email: body.email,
-                message: body.message,
-                productName: body.productName || '',
-                serviceName: body.serviceName || '',
-                categoryName: body.categoryName || '',
-                pageUrl: body.pageUrl || '',
-                timestamp: body.timestamp || new Date().toISOString()
+                name: sanitizeInput(body.name),
+                company: sanitizeInput(body.company || ''),
+                phone: sanitizeInput(body.phone || ''),
+                email: sanitizeInput(body.email),
+                message: sanitizeInput(body.message),
+                productName: sanitizeInput(body.productName || ''),
+                serviceName: sanitizeInput(body.serviceName || ''),
+                categoryName: sanitizeInput(body.categoryName || ''),
+                pageUrl: sanitizeInput(body.pageUrl || ''),
+                timestamp: new Date().toISOString()
               };
 
               // 1. Save to local file
@@ -332,10 +462,21 @@ export default defineConfig({
 
           if (req.url === '/api/login' && req.method === 'POST') {
             try {
+              if (checkRateLimit(ip, 5, 60000)) {
+                res.writeHead(429, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Too many login attempts. Please try again later.' }));
+                return;
+              }
+
               const body = await parseJson(req);
-              if (body.username === 'admin' && body.password === 'adminpassword123') {
+              const adminUsername = process.env.ADMIN_USERNAME || 'admin';
+              const adminPassword = process.env.ADMIN_PASSWORD || 'adminpassword123';
+              const jwtSecret = process.env.JWT_SECRET || 'fake-jwt-token-skylife-123';
+
+              if (body.username === adminUsername && body.password === adminPassword) {
+                const token = generateSessionToken(body.username, jwtSecret);
                 res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ token: 'fake-jwt-token-skylife-123' }));
+                res.end(JSON.stringify({ token }));
               } else {
                 res.writeHead(401, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ error: 'Invalid username or password' }));
@@ -355,9 +496,10 @@ export default defineConfig({
             }
             try {
               const content = await parseJson(req);
+              const sanitizedContent = sanitizeCmsContent(content);
               fs.writeFileSync(
                 path.join(process.cwd(), 'public', 'content.json'),
-                JSON.stringify(content, null, 2),
+                JSON.stringify(sanitizedContent, null, 2),
                 'utf-8'
               );
               res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -376,6 +518,12 @@ export default defineConfig({
               return;
             }
             try {
+              if (checkRateLimit(ip, 10, 60000)) {
+                res.writeHead(429, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Too many file uploads. Please try again later.' }));
+                return;
+              }
+
               const { files } = await parseMultipart(req);
               const fileKey = Object.keys(files)[0];
               if (!fileKey) {
@@ -386,6 +534,27 @@ export default defineConfig({
 
               const uploadedFile = files[fileKey];
               const fileExt = path.extname(uploadedFile.filename).toLowerCase();
+
+              // Security Hardening: Allowed Extensions and File Sizes validation
+              const ALLOWED_EXTENSIONS = ['.pdf', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.mp4', '.webm', '.ogg'];
+              const MAX_FILE_SIZE_LIMIT = 50 * 1024 * 1024; // 50MB absolute max (video)
+              const MAX_STANDARD_SIZE_LIMIT = 10 * 1024 * 1024; // 10MB limit for pdf/images
+
+              if (!ALLOWED_EXTENSIONS.includes(fileExt)) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: `File type ${fileExt} is not allowed.` }));
+                return;
+              }
+
+              const fileSize = uploadedFile.data.length;
+              const isVideo = ['.mp4', '.webm', '.ogg'].includes(fileExt);
+              const sizeLimit = isVideo ? MAX_FILE_SIZE_LIMIT : MAX_STANDARD_SIZE_LIMIT;
+              if (fileSize > sizeLimit) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: `File size exceeds the limit of ${sizeLimit / (1024 * 1024)}MB.` }));
+                return;
+              }
+
               const baseName = path.basename(uploadedFile.filename, fileExt).replace(/[^a-zA-Z0-9_-]/g, '_');
               const newFilename = `${baseName}_${Date.now()}${fileExt}`;
               const targetPath = path.join(uploadDir, newFilename);
@@ -406,6 +575,11 @@ export default defineConfig({
           }
 
           if (req.url.startsWith('/api/media') && req.method === 'GET') {
+            if (!checkAuth(req.headers)) {
+              res.writeHead(403, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Unauthorized' }));
+              return;
+            }
             try {
               const files = fs.readdirSync(uploadDir);
               const mediaList = files.map(filename => {
@@ -707,5 +881,6 @@ export default defineConfig({
       }
     }
   ],
+  };
 })
 
